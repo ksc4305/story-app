@@ -1,0 +1,46 @@
+.cover-selection {
+    padding: 20px;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .subtitle {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .title-input {
+    margin-bottom: 20px;
+  }
+  
+  .cover-grid {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+  
+  .cover.selected {
+    border-color: blue;
+  }
+  
+  .cover-image {
+    width: 100%;
+    height: auto;
+  }
+  
+  .apply-button {
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  

@@ -1,0 +1,42 @@
+.story-summary {
+    padding: 20px;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .cover-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .cover-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .paragraph-container {
+    margin-bottom: 20px;
+  }
+  
+  .paragraph-text {
+    margin-bottom: 10px;
+  }
+  
+  .image-container {
+    text-align: center;
+  }
+  
+  .paragraph-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .create-button {
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  

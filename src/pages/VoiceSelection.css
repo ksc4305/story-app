@@ -1,0 +1,33 @@
+.voice-selection {
+    padding: 20px;
+  }
+  
+  .title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .voice-grid {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .voice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .voice.selected {
+    border-color: blue;
+  }
+  
+  .finish-button {
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  
