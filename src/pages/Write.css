@@ -1,18 +1,46 @@
 .write {
-    padding: 20px;
-  }
-  
-  .write-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .story-input {
-    margin-bottom: 20px;
-  }
-  
-  .apply-button {
-    margin-top: 20px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.write-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.story-input {
+  margin-bottom: 10px;
+}
+
+.chat-container {
+  width: 100%;
+  max-width: 800px;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+}
+
+.user-chat {
+  background-color: #d0eafd;
+}
+
+.bot-chat {
+  background-color: #e0ffe0;
+}
+
+.user-chat, .bot-chat {
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.user-chat.Mui-selected, .bot-chat.Mui-selected {
+  background-color: #ffd700;
+}

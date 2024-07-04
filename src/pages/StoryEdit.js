@@ -67,7 +67,7 @@ function StoryEdit() {
         ))}
       </Grid>
       <Button variant="contained" color="primary" onClick={handleApplyClick} className="apply-button">
-        그림 적용
+        적용하기
       </Button>
     </div>
   );

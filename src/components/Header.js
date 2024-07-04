@@ -5,17 +5,16 @@ import './Header.css';
 
 function Header() {
   return (
-    <AppBar position="static" className="header">
+    <AppBar position="static" className="header" color='default'>
       <Toolbar>
         <Typography variant="h6" className="title">
-          Storybird Korean
+          URDIS
         </Typography>
-        <Button color="inherit" component={Link} to="/">Home</Button>
-        <Button color="inherit" component={Link} to="/instructions">Instructions</Button>
+        <Button color="inherit" component={Link} to="/">홈</Button>
+        <Button color="inherit" component={Link} to="/instructions">소개</Button>
         <Button color="inherit" component={Link} to="/read">Read</Button>
         <Button color="inherit" component={Link} to="/write">Write</Button>
-        <Button color="inherit" component={Link} to="/signin">Sign In</Button>
-        <Button variant="outlined" color="inherit" component={Link} to="/register">Register</Button>
+        <Button color="inherit" component={Link} to="/login"style={{backgroundColor: 'gray', width: '100px'}}>로그인</Button>
       </Toolbar>
     </AppBar>
   );

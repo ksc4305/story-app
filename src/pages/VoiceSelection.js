@@ -42,7 +42,7 @@ function VoiceSelection() {
         ))}
       </Grid>
       <Button variant="contained" color="primary" onClick={handleFinishClick} className="finish-button">
-        선택 완료
+        음성 선택
       </Button>
     </div>
   );
