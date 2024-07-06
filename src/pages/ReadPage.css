@@ -1,0 +1,33 @@
+v/* src/pages/ReadPage.css */
+.read-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .title {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .search-input {
+    margin-bottom: 20px;
+  }
+  
+  .story-grid {
+    margin-top: 20px;
+  }
+  
+  .story-box {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+  }
+  
+  .story-box:hover {
+    background-color: #f0f0f0;
+  }
+  

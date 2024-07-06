@@ -1,72 +1,107 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, TextField, Paper, Typography, List, ListItem, ListItemText, ListItemButton } from '@mui/material';
+import { Box, Button, Modal, TextField, Typography, IconButton, InputAdornment, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import './Write.css';
 
+const themes = [
+  { id: 1, name: "잔혹동화", prompt: "어두운 숲속에서 일어나는 이야기..." },
+  { id: 2, name: "로맨스", prompt: "두 사람의 운명적인 만남..." },
+  { id: 3, name: "공포", prompt: "문득 귓가를 스치는 속삭임..." },
+  { id: 4, name: "스릴러", prompt: "숨 막히는 추격전이 시작되었다..." }
+];
+
 function Write() {
-  const [story, setStory] = useState('');
-  const [chatHistory, setChatHistory] = useState([]);
-  const [selectedResponse, setSelectedResponse] = useState(null);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState(themes[0]);
+  const [inputText, setInputText] = useState('');
+  const [rows, setRows] = useState(1);  
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const handleStoryChange = (event) => {
-    setStory(event.target.value);
+  const handleOpen = (theme) => {
+    setSelectedTheme(theme);
+    setOpen(true);
   };
 
-  const handleRegisterClick = () => {
-    // 사용자가 입력한 이야기를 대화창에 추가
-    setChatHistory([...chatHistory, { type: 'user', text: story }]);
-    setStory('');
-
-    // 챗봇의 응답 추가 (이 부분은 실제 백엔드 연동 필요)
-    setChatHistory([...chatHistory, { type: 'user', text: story }, { type: 'bot', text: '챗봇의 응답 예시' }]);
+  const handleClose = () => {
+    setOpen(false);
   };
 
-  const handleResponseClick = (index) => {
-    setSelectedResponse(index);
+  const handleInputChange = (event) => {
+    setInputText(event.target.value);
+    updateRows(event.target.value);
   };
 
-  const handleApplyClick = () => {
-    // 선택한 응답을 저장 (이 부분은 실제 백엔드 연동 필요)
-    if (selectedResponse !== null) {
-      const selectedChat = chatHistory[selectedResponse];
-      console.log('선택된 응답:', selectedChat);
-      // DB에 저장 로직 추가
-      navigate('/cover-selection');
+  const updateRows = (text) => {
+    const newLineCount = text.split('\n').length || 1;
+    setRows(newLineCount);
+  };
+
+  const handleSubmit = () => {
+    if (inputText.trim()) {
+      setShowConfirmDialog(true);
     }
   };
 
+  const handleDialogClose = () => {
+    setShowConfirmDialog(false);
+  };
+
+  const handleConfirm = () => {
+    console.log("Story confirmed:", inputText);
+    navigate('/write2'); // 이동할 때 추가적인 상태 전달이 필요할 수 있습니다.
+    setShowConfirmDialog(false);
+  };
+
   return (
-    <div className="write">
-      <Paper className="chat-container" elevation={3}>
-        <List>
-          {chatHistory.map((chat, index) => (
-            <ListItem
-              key={index}
-              className={chat.type === 'user' ? 'user-chat' : 'bot-chat'}
-              onClick={() => handleResponseClick(index)}
-              selected={selectedResponse === index}
-            >
-              <ListItemText primary={chat.text} />
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
-      <div className="write-container">
+    <Box className="write-page">
+      <Typography variant="h4" sx={{ mb: 2, textAlign: 'center' }}>이야기 만들기</Typography>
+      <Box className="theme-buttons">
+        {themes.map(theme => (
+          <Button key={theme.id} variant="outlined" sx={{ m: 1 }} onClick={() => handleOpen(theme)}>
+            {theme.name}
+          </Button>
+        ))}
+      </Box>
+      <Modal open={open} onClose={handleClose}>
+        <Box className="modal-style">
+          <Typography variant="h6">{selectedTheme.name}</Typography>
+          <Typography>{selectedTheme.prompt}</Typography>
+        </Box>
+      </Modal>
+      <Box className="story-input-container">
         <TextField
-          label="이야기를 입력하세요"
+          label="당신의 이야기를 적어보세요"
           multiline
-          rows={4}
-          variant="outlined"
+          rows={rows}
           fullWidth
-          value={story}
-          onChange={handleStoryChange}
-          className="story-input"
+          variant="outlined"
+          value={inputText}
+          onChange={handleInputChange}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleSubmit}>
+                  <SendIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
         />
-        <Button variant="contained" color="primary" onClick={handleRegisterClick}>등록</Button>
-      </div>
-      <Button variant="contained" color="secondary" onClick={handleApplyClick} disabled={selectedResponse === null}>적용하기</Button>
-    </div>
+      </Box>
+      <Dialog open={showConfirmDialog} onClose={handleDialogClose}>
+        <DialogTitle>이야기 확인</DialogTitle>
+        <DialogContent>
+          <DialogContentText>이 내용을 토대로 이야기를 구성하시겠습니까?</DialogContentText>
+          <Typography>{inputText}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleConfirm} color="primary">확인</Button>
+          <Button onClick={handleDialogClose} color="secondary">취소</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 }
 

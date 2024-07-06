@@ -1,46 +1,29 @@
-.write {
+.write-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
 }
 
-.write-container {
-  width: 100%;
-  max-width: 800px;
+.theme-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.story-input {
-  margin-bottom: 10px;
+.modal-style {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  box-shadow: 24px;
+  width: 300px;
 }
 
-.chat-container {
+.story-input-container {
+  margin-top: 20px;
   width: 100%;
-  max-width: 800px;
-  max-height: 400px;
-  overflow-y: auto;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #f0f0f0;
 }
 
-.user-chat {
-  background-color: #d0eafd;
-}
-
-.bot-chat {
-  background-color: #e0ffe0;
-}
-
-.user-chat, .bot-chat {
-  border-radius: 10px;
-  margin-bottom: 10px;
-  padding: 10px;
-}
-
-.user-chat.Mui-selected, .bot-chat.Mui-selected {
-  background-color: #ffd700;
-}
