@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography, Paper } from '@mui/material';
+import { useStory } from '../contexts/StoryContext';
 
-function WritePage({ currentPage, nextPage, previousPage, textOptions }) {
+function WritePageComponent({ currentPage, nextPage, previousPage, textOptions }) {
     const navigate = useNavigate();
+    const { addOption } = useStory();
     const [selectedOption, setSelectedOption] = useState(null);
 
     const handleOptionSelect = (index) => {
         setSelectedOption(index);
     };
 
-    const handlePrevious = () => {
-        navigate(previousPage);
-    };
-
     const handleNext = () => {
         if (selectedOption !== null) {
+            addOption(textOptions[selectedOption]);  // 선택된 옵션의 텍스트를 추가
             navigate(nextPage);
         }
+    };
+
+    const handlePrevious = () => {
+        navigate(previousPage);
     };
 
     return (
@@ -49,4 +52,4 @@ function WritePage({ currentPage, nextPage, previousPage, textOptions }) {
     );
 }
 
-export default WritePage;
+export default WritePageComponent;

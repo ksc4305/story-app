@@ -50,7 +50,7 @@ function Write() {
 
   const handleConfirm = () => {
     console.log("Story confirmed:", inputText);
-    navigate('/write2'); // 이동할 때 추가적인 상태 전달이 필요할 수 있습니다.
+    navigate('/write1'); // 이동할 때 추가적인 상태 전달이 필요할 수 있습니다.
     setShowConfirmDialog(false);
   };
 

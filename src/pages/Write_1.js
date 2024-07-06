@@ -1,16 +1,30 @@
-
 import React from 'react';
-import WritePage from './Writepage'; // 파일 경로에 따라 다를 수 있습니다.
+import { useStory } from '../contexts/StoryContext';
+import { Button, Box, Typography, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-export default function Write1() {
-    return <WritePage
-        currentPage={1}
-        nextPage='/write2'
-        previousPage='/write1'
-        textOptions={[
-            "1",
-            "2",
-            "3"
-        ]}
-    />;
+function Write1() {
+    const { addOption } = useStory();
+    const navigate = useNavigate();
+
+    const initialText = '인생의 시작에 방랑자처럼 천천히 걸었습니다...';
+
+    // "다음" 버튼을 눌렀을 때 실행되는 함수
+    const handleNext = () => {
+        addOption(initialText);  // 리스트에 초기 텍스트 추가
+        navigate('/write2');     // Write2 페이지로 이동
+    };
+
+    return (
+        <Box sx={{ width: 300, mx: 'auto', mt: 4, textAlign: 'center' }}>
+            <Paper elevation={3} sx={{ p: 2 }}>
+                <Typography variant="h5" sx={{ mb: 2 }}>Page.1</Typography>
+                <Typography sx={{ mb: 2 }}>{initialText}</Typography>
+                <Button variant="contained" onClick={handleNext}>다음</Button>
+            </Paper>
+            <Typography sx={{ mt: 2 }}>페이지: 1 / 10</Typography>
+        </Box>
+    );
 }
+
+export default Write1;

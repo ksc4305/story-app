@@ -1,15 +1,14 @@
 import React from 'react';
-import WritePage from './Writepage'; // 파일 경로에 따라 다를 수 있습니다.
+import { useStory } from '../contexts/StoryContext';
+import WritePageComponent from '../components/WritePageComponent';
 
 export default function Write7() {
-    return <WritePage
+    const { addOption } = useStory();
+    return <WritePageComponent
         currentPage={7}
         nextPage='/write8'
         previousPage='/write6'
-        textOptions={[
-            "19",
-            "20",
-            "21"
-        ]}
+        textOptions={["Option2-1", "Option2-2", "Option2-3"]}
+        onSelectOption={addOption}
     />;
 }
