@@ -1,20 +1,26 @@
+// src/components/WritePageComponent.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Typography, Paper } from '@mui/material';
-import { useStory } from '../contexts/StoryContext';
+import { saveStory } from '../api'; // api.js에서 가져옴
 
 function WritePageComponent({ currentPage, nextPage, previousPage, textOptions }) {
     const navigate = useNavigate();
-    const { addOption } = useStory();
     const [selectedOption, setSelectedOption] = useState(null);
 
     const handleOptionSelect = (index) => {
         setSelectedOption(index);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (selectedOption !== null) {
-            addOption(textOptions[selectedOption]);  // 선택된 옵션의 텍스트를 추가
+            const storyData = {
+                page: currentPage,
+                option: textOptions[selectedOption]
+            };
+            // 서버 통신 주석 처리
+            // await saveStory(storyData);
+            console.log("Option saved (mock):", storyData); // Mock save
             navigate(nextPage);
         }
     };

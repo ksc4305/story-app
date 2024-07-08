@@ -1,7 +1,9 @@
+// src/pages/Write.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, IconButton, InputAdornment } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { saveStory } from '../api'; // api.js에서 가져옴
 import './Write.css';
 
 function Write() {
@@ -19,13 +21,15 @@ function Write() {
     setRows(newLineCount);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (inputText.trim()) {
       // JSON 형태로 데이터를 저장
       const storyData = {
         text: inputText
       };
-      console.log("Story saved:", JSON.stringify(storyData));
+      // 서버 통신 주석 처리
+      // await saveStory(storyData);
+      console.log("Story saved (mock):", storyData); // Mock save
       navigate('/write1'); // 이동할 때 추가적인 상태 전달이 필요할 수 있습니다.
     }
   };

@@ -2,6 +2,7 @@ import React from 'react';
 import { useStory } from '../contexts/StoryContext';
 import { Button, Box, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { DoorSliding } from '@mui/icons-material';
 
 function Write1() {
     const { addOption } = useStory();
@@ -14,7 +15,7 @@ function Write1() {
         addOption(initialText);  // 리스트에 초기 텍스트 추가
         navigate('/write2');     // Write2 페이지로 이동
     };
-
+    
     return (
         <Box sx={{ width: 300, mx: 'auto', mt: 4, textAlign: 'center' }}>
             <Paper elevation={3} sx={{ p: 2 }}>

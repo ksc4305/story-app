@@ -1,29 +1,39 @@
-import React from 'react';
+// src/pages/FinalReview.js
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useStory } from '../contexts/StoryContext';
 import { Box, Button, Typography } from '@mui/material';
+import { getStory } from '../api'; // api.js에서 가져옴
 
 function FinalReview() {
     const navigate = useNavigate();
-    const { selectedOptions, removeLastOption } = useStory();
+    const [storyData, setStoryData] = useState([]);
 
-    const handlePrevious = () => {
-        removeLastOption();  // 마지막 선택된 옵션을 제거
-        navigate('/write10');  // 마지막 페이지로 돌아가기
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            // 서버 통신 주석 처리
+            // const data = await getStory();
+            const data = [
+                { page: 1, option: 'Option1' },
+                { page: 2, option: 'Option2' },
+                { page: 3, option: 'Option3' },
+            ]; // Mock data
+            console.log("Story fetched (mock):", data);
+            setStoryData(data);
+        };
+
+        fetchData();
+    }, []);
 
     const handleCreate = () => {
-        // 최종 스토리 생성 및 이미지 선택 페이지로 넘어가는 로직
         navigate('/imageSelection');
     };
 
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h4" gutterBottom>스토리 최종 확인</Typography>
-            {selectedOptions.map((option, index) => (
-                <Typography key={index}>{option}</Typography>
+            {storyData.map((item, index) => (
+                <Typography key={index}>{item.option}</Typography>
             ))}
-            <Button variant="contained" onClick={handlePrevious}>이전</Button>
             <Button variant="contained" color="primary" onClick={handleCreate}>만들기</Button>
         </Box>
     );
