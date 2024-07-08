@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Write from './pages/Write';
 import Write1 from './pages/Write_1';
@@ -13,35 +13,20 @@ import Write8 from './pages/Write_8';
 import Write9 from './pages/Write_9';
 import Write10 from './pages/Write_10';
 import FinalReview from './pages/FinalReview';
-import ImageSelection from './pages/StartImageSelection';
+import ImageSelection from './pages/ImageSelection';
 import ReadPage from './pages/ReadPage';
 import LoginPage from './pages/LoginPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import { StoryProvider, useStory } from './contexts/StoryContext';
+import { StoryProvider } from './contexts/StoryContext';
 
 import './App.css';
-
-function RouteChangeHandler() {
-    const { clearOptions } = useStory();
-    const location = useLocation();
-  
-    React.useEffect(() => {
-      const clearRoutes = ['/', '/write', '/read', '/login'];
-      if (clearRoutes.includes(location.pathname)) {
-        clearOptions();
-      }
-    }, [location, clearOptions]);
-  
-    return null;  // 이 컴포넌트는 시각적인 출력을 하지 않습니다.
-  }
 
 function App() {
     return (
         <StoryProvider>
             <Router>
                 <Header />
-                <RouteChangeHandler />  {/* 라우트 변경 핸들러를 추가 */}
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/write" element={<Write />} />

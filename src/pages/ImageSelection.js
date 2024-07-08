@@ -55,3 +55,99 @@ function ImageSelection() {
 }
 
 export default ImageSelection;
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { useStory } from '../contexts/StoryContext';
+// import { Box, Button, Typography, Grid, Card, CardMedia, CardContent } from '@mui/material';
+
+// // 이미지 URL을 가져오는 함수 (실제로는 API 호출 등으로 대체)
+// const getImagesForOption = (option) => {
+//   // 예시 이미지 URL들
+//   return [
+//     'https://example.com/image1.jpg',
+//     'https://example.com/image2.jpg',
+//     'https://example.com/image3.jpg',
+//   ];
+// };
+
+// function ImageSelection() {
+//   const navigate = useNavigate();
+//   const { selectedOptions } = useStory();
+//   const [selectedImages, setSelectedImages] = useState({});
+//   const [currentOptionIndex, setCurrentOptionIndex] = useState(0);
+
+//   useEffect(() => {
+//     // 컴포넌트 마운트 시 첫 번째 옵션에 대한 이미지 로드
+//     if (selectedOptions.length > 0) {
+//       setSelectedImages({
+//         [currentOptionIndex]: getImagesForOption(selectedOptions[currentOptionIndex])
+//       });
+//     }
+//   }, []);
+
+//   const handleImageSelect = (imageUrl) => {
+//     setSelectedImages(prev => ({
+//       ...prev,
+//       [currentOptionIndex]: imageUrl
+//     }));
+//   };
+
+//   const handleNext = () => {
+//     if (currentOptionIndex < selectedOptions.length - 1) {
+//       const nextIndex = currentOptionIndex + 1;
+//       setCurrentOptionIndex(nextIndex);
+//       if (!selectedImages[nextIndex]) {
+//         setSelectedImages(prev => ({
+//           ...prev,
+//           [nextIndex]: getImagesForOption(selectedOptions[nextIndex])
+//         }));
+//       }
+//     } else {
+//       // 모든 이미지 선택 완료, 다음 단계로 진행
+//       navigate('/finalStory');
+//     }
+//   };
+
+//   const handlePrevious = () => {
+//     if (currentOptionIndex > 0) {
+//       setCurrentOptionIndex(currentOptionIndex - 1);
+//     }
+//   };
+
+//   return (
+//     <Box sx={{ padding: 2 }}>
+//       <Typography variant="h4" gutterBottom>삽화 선택</Typography>
+//       <Typography variant="body1" gutterBottom>{selectedOptions[currentOptionIndex]}</Typography>
+      
+//       <Grid container spacing={2}>
+//         {selectedImages[currentOptionIndex]?.map((imageUrl, index) => (
+//           <Grid item xs={4} key={index}>
+//             <Card 
+//               onClick={() => handleImageSelect(imageUrl)}
+//               sx={{ border: selectedImages[currentOptionIndex] === imageUrl ? '2px solid blue' : 'none' }}
+//             >
+//               <CardMedia
+//                 component="img"
+//                 height="140"
+//                 image={imageUrl}
+//                 alt={`Option ${currentOptionIndex + 1} Image ${index + 1}`}
+//               />
+//               <CardContent>
+//                 <Typography variant="body2">이미지 {index + 1}</Typography>
+//               </CardContent>
+//             </Card>
+//           </Grid>
+//         ))}
+//       </Grid>
+
+//       <Box sx={{ mt: 2 }}>
+//         <Button variant="contained" onClick={handlePrevious} disabled={currentOptionIndex === 0}>이전</Button>
+//         <Button variant="contained" onClick={handleNext} disabled={!selectedImages[currentOptionIndex]}>
+//           {currentOptionIndex === selectedOptions.length - 1 ? '완료' : '다음'}
+//         </Button>
+//       </Box>
+//     </Box>
+//   );
+// }
+
+// export default ImageSelection;
