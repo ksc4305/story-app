@@ -27,11 +27,20 @@
     margin-top: 20px;
   }
   
+  .navigation-controls .MuiIconButton-root {
+    font-size: 2rem; /* Increase the size of the arrow buttons */
+  }
+  
   .page-number {
     margin: 0 20px;
+    font-weight: bold; /* Make the page number text bold */
   }
   
   .play-button {
     margin-top: 20px;
+  }
+  
+  .play-button .MuiIconButton-root {
+    font-size: 5rem; /* Increase the size of the play button */
   }
   

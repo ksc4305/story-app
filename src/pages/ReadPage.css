@@ -1,33 +1,69 @@
-v/* src/pages/ReadPage.css */
+/* src/pages/ReadPage.css */
 .read-page {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .title {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .search-input {
-    margin-bottom: 20px;
-  }
-  
-  .story-grid {
-    margin-top: 20px;
-  }
-  
-  .story-box {
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
-    background-color: #f9f9f9;
-    transition: background-color 0.3s;
-  }
-  
-  .story-box:hover {
-    background-color: #f0f0f0;
-  }
-  
+  padding: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center; /* Center-align the content */
+}
+
+.search-input-container {
+  margin: 25px auto; /* Center the search bar horizontally with top and bottom margin */
+  width: 80%; /* Adjust the width as needed */
+}
+
+.search-input .MuiOutlinedInput-root {
+  border-radius: 25px;
+  padding-right: 40px; /* Make space for the search icon */
+}
+
+.search-input .MuiOutlinedInput-notchedOutline {
+  border-color: #32cd32;
+}
+
+.search-input .MuiOutlinedInput-input {
+  padding: 12px 14px; /* Adjust padding for vertical centering */
+}
+
+.story-grid {
+  margin-top: 20px;
+}
+
+.story-box {
+  padding: 20px 10px; /* Adjusted padding: 20px top/bottom, 10px left/right */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  text-align: center;
+  background-color: #fff;
+  transition: background-color 0.3s;
+  margin: 15px; /* Adjust the margin for spacing */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.story-box:hover {
+  background-color: #f0f0f0;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+}
+
+.icon-container .icon {
+  display: flex;
+  align-items: center;
+}
+
+.icon-container .icon span {
+  margin-left: 5px;
+}
+
+.icon-container .icon .heart {
+  cursor: pointer;
+}
+
+.icon-container .icon .heart.filled {
+  color: #32cd32; /* Green color when heart is filled */
+}
