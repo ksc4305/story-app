@@ -1,3 +1,4 @@
+/* src/pages/Home.css */
 .home {
   text-align: center;
   padding: 50px;
@@ -10,7 +11,24 @@
 
 .read-section {
   padding: 20px 0;
-  text-align: left;
+}
+
+.search-input-container {
+  margin: 25px auto;
+  width: 80%;
+}
+
+.search-input .MuiOutlinedInput-root {
+  border-radius: 25px;
+  padding-right: 40px;
+}
+
+.search-input .MuiOutlinedInput-notchedOutline {
+  border-color: #32cd32;
+}
+
+.search-input .MuiOutlinedInput-input {
+  padding: 12px 14px;
 }
 
 .story-grid {
@@ -18,14 +36,111 @@
 }
 
 .story-box {
-  padding: 20px;
+  padding: 20px 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 20px;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #fff;
   transition: background-color 0.3s;
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .story-box:hover {
   background-color: #f0f0f0;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+}
+
+.icon-container .icon {
+  display: flex;
+  align-items: center;
+}
+
+.icon-container .icon span {
+  margin-left: 5px;
+}
+
+.icon-container .icon .heart {
+  cursor: pointer;
+}
+
+.icon-container .icon .heart.filled {
+  color: #32cd32;
+}
+
+/* src/pages/ReadPage.css */
+.read-page {
+  padding: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.search-input-container {
+  margin: 25px auto;
+  width: 80%;
+}
+
+.search-input .MuiOutlinedInput-root {
+  border-radius: 25px;
+  padding-right: 40px;
+}
+
+.search-input .MuiOutlinedInput-notchedOutline {
+  border-color: #32cd32;
+}
+
+.search-input .MuiOutlinedInput-input {
+  padding: 12px 14px;
+}
+
+.story-grid {
+  margin-top: 20px;
+}
+
+.story-box {
+  padding: 20px 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  text-align: center;
+  background-color: #fff;
+  transition: background-color 0.3s;
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.story-box:hover {
+  background-color: #f0f0f0;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+}
+
+.icon-container .icon {
+  display: flex;
+  align-items: center;
+}
+
+.icon-container .icon span {
+  margin-left: 5px;
+}
+
+.icon-container .icon .heart {
+  cursor: pointer;
+}
+
+.icon-container .icon .heart.filled {
+  color: #32cd32;
 }

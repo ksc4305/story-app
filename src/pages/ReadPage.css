@@ -17,6 +17,7 @@
 }
 
 .search-input .MuiOutlinedInput-notchedOutline {
+  border-width: 1px;
   border-color: #32cd32;
 }
 
