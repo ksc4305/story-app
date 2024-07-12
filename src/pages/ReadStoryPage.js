@@ -1,7 +1,6 @@
-// src/pages/ReadStoryPage.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Typography, Box, IconButton } from '@mui/material';
+import { Typography, Box, IconButton } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -25,17 +24,17 @@ function ReadStoryPage() {
       id: storyId,
       creator: '사용자 1', // 창작자 이름
       pages: [
-        { image: '/path/to/cover.jpg', content: '' }, // Cover page
-        { image: '/path/to/image1.jpg', content: '동화 내용 1' },
-        { image: '/path/to/image2.jpg', content: '동화 내용 2' },
-        { image: '/path/to/image3.jpg', content: '동화 내용 3' },
-        { image: '/path/to/image4.jpg', content: '동화 내용 4' },
-        { image: '/path/to/image5.jpg', content: '동화 내용 5' },
-        { image: '/path/to/image6.jpg', content: '동화 내용 6' },
-        { image: '/path/to/image7.jpg', content: '동화 내용 7' },
-        { image: '/path/to/image8.jpg', content: '동화 내용 8' },
-        { image: '/path/to/image9.jpg', content: '동화 내용 9' },
-        { image: '/path/to/image10.jpg', content: '동화 내용 10' },
+        { image: '/gg1.jpg', content: '' }, // Cover page
+        { image: '/gg2.jpg', content: '동화 내용 1ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ' },
+        { image: '/gg3.jpg', content: '동화 내용 2ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ' },
+        { image: '/gg4.jpg', content: '동화 내용 3ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ' },
+        { image: '/gg5.jpg', content: '동화 내용 4ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ' },
+        { image: '/gg6.jpg', content: '동화 내용 5' },
+        { image: '/gg7.jpg', content: '동화 내용 6' },
+        { image: '/gg8.jpg', content: '동화 내용 7' },
+        { image: '/gg9.jpg', content: '동화 내용 8' },
+        { image: '/gg10.jpg', content: '동화 내용 9' },
+        { image: '/gg11.jpg', content: '동화 내용 10' },
         { content: 'Created by 사용자 1' } // Last page with only content
       ]
     };
@@ -69,12 +68,12 @@ function ReadStoryPage() {
         <Typography variant="body1" className="story-content">
           {story.pages[currentPage].content}
         </Typography>
+        <Typography variant="body1" className="page-number">{currentPage + 1}/{totalPages}</Typography>
       </Box>
       <Box className="navigation-controls">
         <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
           <ArrowBackIosIcon />
         </IconButton>
-        <Typography variant="body1" className="page-number">{currentPage + 1}/{totalPages}</Typography>
         <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
           <ArrowForwardIosIcon />
         </IconButton>

@@ -1,49 +1,47 @@
-/* src/components/StoryBox.css */
 .story-box {
-    position: relative;
-    padding: 20px 10px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    text-align: center;
-    background-color: #fff;
-    transition: background-color 0.3s;
-    margin: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .story-box:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .cover-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-  
-  .icon-container {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 5px;
-  }
-  
-  .icon-container .icon {
-    display: flex;
-    align-items: center;
-  }
-  
-  .icon-container .icon span {
-    margin-left: 5px;
-  }
-  
-  .icon-container .icon .heart {
-    cursor: pointer;
-  }
-  
-  .icon-container .icon .heart.filled {
-    color: #32cd32;
-  }
-  
+  position: relative;
+  padding: 20px 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  text-align: center;
+  background-color: #fff;
+  transition: background-color 0.3s;
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.story-box:hover {
+  background-color: #f0f0f0;
+}
+
+.cover-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 5px;
+}
+
+.icon-container .icon {
+  display: flex;
+  align-items: center;
+}
+
+.icon-container .icon span {
+  margin-left: 5px;
+}
+
+.icon-container .icon .heart {
+  cursor: pointer;
+}
+
+.icon-container .icon .heart.filled {
+  color: #32cd32;
+}
