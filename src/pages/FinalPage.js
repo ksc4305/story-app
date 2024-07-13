@@ -26,8 +26,7 @@ const FinalPage = () => {
     // fetchData();
 
     // 예시 데이터를 사용하여 10가지 내용을 출력
-    const initialSentence = "이것은 첫 번째 페이지의 문장입니다."; // 첫 번째 페이지 문장 추가
-    const allSentences = [initialSentence, ...Object.values(selectedOptions)];
+    const allSentences = [...Object.values(selectedOptions)];
     setSentences(allSentences);
   }, [selectedOptions]);
 
@@ -53,10 +52,7 @@ const FinalPage = () => {
   return (
     <Box sx={{ width: 300, mx: 'auto', mt: 4, textAlign: 'center' }}>
       <Box sx={{ mt: 2 }}>
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          {sentences[0]}
-        </Typography>
-        {sentences.slice(1).map((sentence, index) => (
+        {sentences.map((sentence, index) => (
           <Paper
             key={index + 1}
             sx={{
