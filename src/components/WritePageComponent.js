@@ -38,7 +38,6 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     const loadData = async () => {
       const options = await fetchStoryContent(storyId, currentPage);
       setOptions(options);
-
       if (currentPage === 1) {
         setSelectedOption(options[0]);
       }
