@@ -64,78 +64,91 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
       <Paper elevation={3} sx={{ p: 2 }}>
         <Typography variant="h5" sx={{ mb: 2 }}>Page.{currentPage}</Typography>
         {currentPage === 1 ? (
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {options[0]}
-          </Typography>
-        ) : (
-          options.map((option, index) => (
-            <Paper
-              key={index}
-              elevation={3}
-              sx={{
-                mb: 2,
-                p: 2,
-                cursor: 'pointer',
-                bgcolor: selectedOption === option ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                '&:hover': {
-                  bgcolor: 'rgba(144,238,144,0.5)',
-                },
-                '&:active': {
-                  bgcolor: 'rgba(144,238,144,0.8)',
-                },
-                transition: 'background-color 0.3s',
-              }}
-              onClick={() => handleOptionSelect(option)}
-            >
-              {option}
-            </Paper>
-          ))
-        )}
-        {fromFinal ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <Button
-              variant="contained"
-              onClick={handleComplete}
-              sx={{
-                bgcolor: 'lightgreen',
-                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
-                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
-              }}
-            >
-              완료
-            </Button>
-          </Box>
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: currentPage === 1 ? 'center' : 'space-between', mt: 2 }}>
-            {currentPage !== 1 && (
+          <>
+            <Typography sx={{ mb: 2 }}>{options[0]}</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
               <Button
                 variant="contained"
-                onClick={handlePrevious}
+                onClick={handleNext}
                 sx={{
                   bgcolor: 'lightgreen',
                   '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
                   '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
                 }}
               >
-                이전
+                다음
               </Button>
+            </Box>
+          </>
+        ) : (
+          <>
+            {options.map((option, index) => (
+              <Paper
+                key={index}
+                elevation={3}
+                sx={{
+                  mb: 2,
+                  p: 2,
+                  cursor: 'pointer',
+                  bgcolor: selectedOption === option ? 'rgba(144,238,144,0.8)' : 'background.paper',
+                  '&:hover': {
+                    bgcolor: 'rgba(144,238,144,0.5)',
+                  },
+                  '&:active': {
+                    bgcolor: 'rgba(144,238,144,0.8)',
+                  },
+                  transition: 'background-color 0.3s',
+                }}
+                onClick={() => handleOptionSelect(option)}
+              >
+                {option}
+              </Paper>
+            ))}
+            {fromFinal ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={handleComplete}
+                  sx={{
+                    bgcolor: 'lightgreen',
+                    '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                    '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+                  }}
+                >
+                  완료
+                </Button>
+              </Box>
+            ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                <Button
+                  variant="contained"
+                  onClick={handlePrevious}
+                  sx={{
+                    bgcolor: 'lightgreen',
+                    '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                    '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+                  }}
+                >
+                  이전
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={handleNext}
+                  disabled={!selectedOption}
+                  sx={{
+                    bgcolor: 'lightgreen',
+                    '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                    '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+                  }}
+                >
+                  {currentPage === 10 ? '완료' : '다음'}
+                </Button>
+              </Box>
             )}
-            <Button
-              variant="contained"
-              onClick={handleNext}
-              disabled={!selectedOption && currentPage !== 1}
-              sx={{
-                bgcolor: 'lightgreen',
-                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
-                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
-              }}
-            >
-              {currentPage === 10 ? '완료' : '다음'}
-            </Button>
-          </Box>
+          </>
         )}
       </Paper>
-      <Typography sx={{ mt: 2 }}>페이지: {currentPage === 'final' ? '완료' : `${currentPage} / 10`}</Typography>
+      <Typography sx={{ mt: 2 }}>페이지: {currentPage} / 10</Typography>
     </Box>
   );
 };
