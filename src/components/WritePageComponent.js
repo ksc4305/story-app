@@ -15,7 +15,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const dispatch = useDispatch();
   const selectedOptions = useSelector((state) => state.story.selectedOptions);
   const [options, setOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(selectedOptions[currentPage] || '');
+  const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
 
