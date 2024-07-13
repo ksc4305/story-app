@@ -2,24 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Typography, Paper } from '@mui/material';
+import { fetchStoryContent } from '../services/storyService';
 import { updateSelectedOption } from '../store/storySlice';
-
-// 더미 데이터 함수
-const fetchStoryContent = async (storyId, page) => {
-  if (page === 1) {
-    return ["이것은 첫 번째 페이지의 문장입니다."];
-  }
-
-  return [
-    `이것은 ${page}번째 문장의 첫 번째 선택지입니다.`,
-    `이것은 ${page}번째 문장의 두 번째 선택지입니다.`,
-    `이것은 ${page}번째 문장의 세 번째 선택지입니다.`,
-  ];
-};
-
-const fetchFinalStoryContent = async (storyId) => {
-  return ["이것은 첫 번째 페이지의 문장입니다."];
-};
+import axios from "axios";
 
 const WritePageComponent = ({ currentPage, nextPage }) => {
   const navigate = useNavigate();
@@ -30,15 +15,22 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const dispatch = useDispatch();
   const selectedOptions = useSelector((state) => state.story.selectedOptions);
   const [options, setOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState(selectedOptions[currentPage] || '');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
+
+  //선택한 옵션들 로그 표시
+  useEffect(() => {
+    console.log(selectedOptions)
+  }, [selectedOptions]);
 
   useEffect(() => {
     const loadData = async () => {
       const options = await fetchStoryContent(storyId, currentPage);
       setOptions(options);
-      if (currentPage === 1) {
+
+      // 현재 페이지가 1이면 하나밖에 없는 옵션 선택
+      if(currentPage === 1){
         setSelectedOption(options[0]);
       }
     };
@@ -57,20 +49,19 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const handleNext = () => {
     if (!selectedOption && currentPage !== 1) return;
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
-    setSelectedOption('');
+    setSelectedOption(''); // 다음 페이지로 넘어갈 때 선택지 초기화
 
-    // 더미 데이터를 사용하여 서버 요청 부분 주석 처리
-    // const data = {
-    //   options: options,
-    //   selected_option_index: selectedOptionIndex
-    // };
-    // axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
-    //     .then(res => {
-    //       console.log(res);
-    //     })
-    //     .catch(err => {
-    //       console.log(err);
-    //     });
+    const data = {
+      options: options,
+      selected_option_index: selectedOptionIndex
+    }
+    axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        })
 
     if (currentPage === 10) {
       navigate(`/final?story_id=${storyId}`);
@@ -86,7 +77,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
 
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setSelectedOption('');
+      setSelectedOption(''); // 이전 페이지로 돌아갈 때 선택지 초기화
       navigate(`/write/${currentPage - 1}?story_id=${storyId}`);
     }
   };
