@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { fetchStoryContent } from '../services/storyService';
 import { updateSelectedOption } from '../store/storySlice';
+import axios from "axios";
 
 const WritePageComponent = ({ currentPage, nextPage }) => {
   const navigate = useNavigate();
@@ -14,13 +15,24 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const dispatch = useDispatch();
   const selectedOptions = useSelector((state) => state.story.selectedOptions);
   const [options, setOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(selectedOptions[currentPage] || '');
+  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
+
+  //선택한 옵션들 로그 표시
+  useEffect(() => {
+    console.log(selectedOptions)
+  }, [selectedOptions]);
 
   useEffect(() => {
     const loadData = async () => {
       const options = await fetchStoryContent(storyId, currentPage);
       setOptions(options);
+
+      // 현재 페이지가 1이면 하나밖에 없는 옵션 선택
+      if(currentPage === 1){
+        setSelectedOption(options[0]);
+      }
     };
 
     loadData();
@@ -30,8 +42,9 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     }
   }, [currentPage, storyId, fromFinalParam]);
 
-  const handleOptionSelect = (option) => {
+  const handleOptionSelect = (option, index) => {
     setSelectedOption(option);
+    setSelectedOptionIndex(index);
   };
 
   const handleNext = () => {
@@ -39,6 +52,18 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
 
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
     setSelectedOption(''); // 다음 페이지로 넘어갈 때 선택지 초기화
+
+    const data = {
+      options: options,
+      selected_option_index: selectedOptionIndex
+    }
+    axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        })
 
     if (currentPage === 10) {
       navigate(`/final?story_id=${storyId}`);
@@ -85,7 +110,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
                 },
                 transition: 'background-color 0.3s',
               }}
-              onClick={() => handleOptionSelect(option)}
+              onClick={() => handleOptionSelect(option, index)}
             >
               {option}
             </Paper>
