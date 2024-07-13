@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Typography, IconButton, InputAdornment, TextField, Switch, FormControlLabel, Select, MenuItem } from '@mui/material';
+import { Box, Button, Typography, IconButton, InputAdornment, TextField, Switch, FormControlLabel } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { resetSelectedOptions } from '../store/storySlice';
+import SelectField from '../components/SelectField';  // 추가
 import './Write.css';
 
 const Write = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [inputText, setInputText] = useState('');
   const [rows, setRows] = useState(1);
   const [helperEnabled, setHelperEnabled] = useState(false);
@@ -54,25 +57,6 @@ const Write = () => {
     }));
   };
 
-  const renderSelect = (name, label, options) => (
-    <Select
-      name={name}
-      value={formData[name]}
-      onChange={handleFormDataChange}
-      displayEmpty
-      style={{ minWidth: 80, marginLeft: 8, marginRight: 8 }}
-    >
-      <MenuItem value="">
-        <em>{label}</em>
-      </MenuItem>
-      {options.map((option, index) => (
-        <MenuItem key={index} value={option}>
-          {option}
-        </MenuItem>
-      ))}
-    </Select>
-  );
-
   const handleSubmit = async () => {
     let source;
     if (helperEnabled) {
@@ -87,13 +71,19 @@ const Write = () => {
     }
 
     if (source.trim()) {
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/stories/init', { source });
-        const { story_id } = response.data;
-        navigate(`/write/1?story_id=${story_id}`);
-      } catch (error) {
-        console.error('Error initializing story:', error);
-      }
+      dispatch(resetSelectedOptions());
+
+      // 서버에 새로운 이야기를 초기화하는 코드 (주석 처리)
+      // try {
+      //   const response = await axios.post('http://127.0.0.1:8000/api/stories/init', { source });
+      //   const { story_id } = response.data;
+      //   navigate(`/write/1?story_id=${story_id}`);
+      // } catch (error) {
+      //   console.error('Error initializing story:', error);
+      // }
+
+      // 더미 데이터로 이야기 시작
+      navigate(`/write/1?story_id=dummy_story_id`);
     }
   };
 
@@ -102,26 +92,30 @@ const Write = () => {
       <Typography variant="h6">입력 도우미</Typography>
       <Box display="flex" flexDirection="column">
         <Box display="flex" alignItems="center">
-          {renderSelect('who', '누가', ['선택 1', '선택 2', '선택 3'])} 는/이/가 
-          {renderSelect('when', '언제', ['선택 1', '선택 2', '선택 3'])} 
-          {renderSelect('where', '어디', ['선택 1', '선택 2', '선택 3'])}에서 
-          {renderSelect('what', '무엇', ['선택 1', '선택 2', '선택 3'])}을/를 
-          {renderSelect('how', '어떻게', ['선택 1', '선택 2', '선택 3'])} 했어요.
+          <SelectField name="who" label="누가" value={formData.who} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} /> 는/이/가 
+          <SelectField name="when" label="언제" value={formData.when} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} /> 
+          <SelectField name="where" label="어디" value={formData.where} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} />에서 
+          <SelectField name="what" label="무엇" value={formData.what} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} />을/를 
+          <SelectField name="how" label="어떻게" value={formData.how} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} /> 했어요.
         </Box>
         <Box display="flex" alignItems="center">
-          {renderSelect('what', '무엇', ['선택 1', '선택 2', '선택 3'])}을/를 
-          {renderSelect('how', '어떻게', ['선택 1', '선택 2', '선택 3'])}했더니 
-          {renderSelect('result', '결과', ['선택 1', '선택 2', '선택 3'])}됐어요.
+          <SelectField name="what" label="무엇" value={formData.what} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} />을/를 
+          <SelectField name="how" label="어떻게" value={formData.how} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} />했더니 
+          <SelectField name="result" label="결과" value={formData.result} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} />됐어요.
         </Box>
         <Box display="flex" alignItems="center">
-          그래서 기분이 {renderSelect('feeling', '감정', ['선택 1', '선택 2', '선택 3'])} 했어요.
+          그래서 기분이 <SelectField name="feeling" label="감정" value={formData.feeling} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} /> 했어요.
         </Box>
         <Box display="flex" alignItems="center">
-          다음에는 {renderSelect('nextWhat', '무엇', ['선택 1', '선택 2', '선택 3'])}을/를 
-          {renderSelect('nextHow', '어떻게', ['선택 1', '선택 2', '선택 3'])} 하고 싶어요.
+          다음에는 <SelectField name="nextWhat" label="무엇" value={formData.nextWhat} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} />을/를 
+          <SelectField name="nextHow" label="어떻게" value={formData.nextHow} onChange={handleFormDataChange} options={['선택 1', '선택 2', '선택 3']} /> 하고 싶어요.
         </Box>
       </Box>
-      <Button variant="contained" onClick={handleSubmit} style={{ marginTop: '16px' }} disabled={!isFormComplete}>
+      <Button variant="contained" onClick={handleSubmit} style={{ marginTop: '16px' }} disabled={!isFormComplete} sx={{
+        bgcolor: 'lightgreen',
+        '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+        '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+      }}>
         전송
       </Button>
     </Box>
@@ -149,7 +143,11 @@ const Write = () => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={handleSubmit}>
+                  <IconButton onClick={handleSubmit} sx={{
+                    bgcolor: 'lightgreen',
+                    '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                    '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+                  }}>
                     <SendIcon />
                   </IconButton>
                 </InputAdornment>

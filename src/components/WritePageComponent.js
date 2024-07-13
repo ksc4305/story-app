@@ -1,61 +1,59 @@
-// src/components/WritePageComponent.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Typography, Paper } from '@mui/material';
-import axios from 'axios';
-import { useStory } from '../contexts/StoryContext';
+import { fetchStoryContent } from '../services/storyService';
+import { updateSelectedOption } from '../store/storySlice';
 
 const WritePageComponent = ({ currentPage, nextPage }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const storyId = queryParams.get('story_id');
-  const { selectedOptions, setSelectedOptions } = useStory();
+  const fromFinalParam = queryParams.get('fromFinal');
+  const dispatch = useDispatch();
+  const selectedOptions = useSelector((state) => state.story.selectedOptions);
   const [options, setOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState(selectedOptions[currentPage] || '');
+  const [fromFinal, setFromFinal] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/stories/${storyId}/contents/${currentPage}`);
-        setOptions(response.data.options || [
-          `이것은 ${currentPage}번째 문장의 첫 번째 선택지입니다.`,
-          `이것은 ${currentPage}번째 문장의 두 번째 선택지입니다.`,
-          `이것은 ${currentPage}번째 문장의 세 번째 선택지입니다.`,
-        ]); // 예시 선택지 제공
-      } catch (error) {
-        console.error('Error fetching story content:', error);
-        setOptions([
-          `이것은 ${currentPage}번째 문장의 첫 번째 선택지입니다.`,
-          `이것은 ${currentPage}번째 문장의 두 번째 선택지입니다.`,
-          `이것은 ${currentPage}번째 문장의 세 번째 선택지입니다.`,
-        ]); // 예시 선택지 제공
-      }
+    const loadData = async () => {
+      const options = await fetchStoryContent(storyId, currentPage);
+      setOptions(options);
     };
 
-    fetchData();
-  }, [storyId, currentPage]);
+    loadData();
+
+    if (fromFinalParam) {
+      setFromFinal(true);
+    }
+  }, [currentPage, storyId, fromFinalParam]);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
 
-  const handleNext = async () => {
-    if (!selectedOption) return;
+  const handleNext = () => {
+    if (!selectedOption && currentPage !== 1) return;
 
-    try {
-      await axios.post(`http://127.0.0.1:8000/api/stories/${storyId}/contents/${currentPage}`, { sentence: selectedOption });
-      setSelectedOptions(prevOptions => [...prevOptions, selectedOption]);
-      setSelectedOption(''); // 다음 페이지로 넘어갈 때 선택지 초기화
+    dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
+    setSelectedOption(''); // 다음 페이지로 넘어갈 때 선택지 초기화
+
+    if (currentPage === 10) {
+      navigate(`/final?story_id=${storyId}`);
+    } else {
       navigate(`/write/${nextPage}?story_id=${storyId}`);
-    } catch (error) {
-      console.error('Error saving story content:', error);
     }
+  };
+
+  const handleComplete = () => {
+    dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
+    navigate(`/final?story_id=${storyId}`);
   };
 
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setSelectedOptions(prevOptions => prevOptions.slice(0, -1));
       setSelectedOption(''); // 이전 페이지로 돌아갈 때 선택지 초기화
       navigate(`/write/${currentPage - 1}?story_id=${storyId}`);
     }
@@ -65,31 +63,79 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     <Box sx={{ width: 300, mx: 'auto', mt: 4, textAlign: 'center' }}>
       <Paper elevation={3} sx={{ p: 2 }}>
         <Typography variant="h5" sx={{ mb: 2 }}>Page.{currentPage}</Typography>
-        {options.map((option, index) => (
-          <Paper
-            key={index}
-            elevation={3}
-            sx={{
-              mb: 2,
-              p: 2,
-              cursor: 'pointer',
-              bgcolor: selectedOption === option ? 'primary.main' : 'background.paper'
-            }}
-            onClick={() => handleOptionSelect(option)}
-          >
-            {option}
-          </Paper>
-        ))}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="contained" onClick={handlePrevious} disabled={currentPage === 1}>
-            이전
-          </Button>
-          <Button variant="contained" onClick={handleNext} disabled={!selectedOption}>
-            다음
-          </Button>
-        </Box>
+        {currentPage === 1 ? (
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {options[0]}
+          </Typography>
+        ) : (
+          options.map((option, index) => (
+            <Paper
+              key={index}
+              elevation={3}
+              sx={{
+                mb: 2,
+                p: 2,
+                cursor: 'pointer',
+                bgcolor: selectedOption === option ? 'rgba(144,238,144,0.8)' : 'background.paper',
+                '&:hover': {
+                  bgcolor: 'rgba(144,238,144,0.5)',
+                },
+                '&:active': {
+                  bgcolor: 'rgba(144,238,144,0.8)',
+                },
+                transition: 'background-color 0.3s',
+              }}
+              onClick={() => handleOptionSelect(option)}
+            >
+              {option}
+            </Paper>
+          ))
+        )}
+        {fromFinal ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={handleComplete}
+              sx={{
+                bgcolor: 'lightgreen',
+                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+              }}
+            >
+              완료
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: currentPage === 1 ? 'center' : 'space-between', mt: 2 }}>
+            {currentPage !== 1 && (
+              <Button
+                variant="contained"
+                onClick={handlePrevious}
+                sx={{
+                  bgcolor: 'lightgreen',
+                  '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                  '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+                }}
+              >
+                이전
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={!selectedOption && currentPage !== 1}
+              sx={{
+                bgcolor: 'lightgreen',
+                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+              }}
+            >
+              {currentPage === 10 ? '완료' : '다음'}
+            </Button>
+          </Box>
+        )}
       </Paper>
-      <Typography sx={{ mt: 2 }}>페이지: {currentPage} / 10</Typography>
+      <Typography sx={{ mt: 2 }}>페이지: {currentPage === 'final' ? '완료' : `${currentPage} / 10`}</Typography>
     </Box>
   );
 };

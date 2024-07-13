@@ -22,9 +22,9 @@ function ReadStoryPage() {
     //   });
     const mockStory = {
       id: storyId,
-      creator: '사용자 1', // 창작자 이름
+      creator: '사용자 1',
       pages: [
-        { image: '/gg1.jpg', content: '' }, // Cover page
+        { image: '/gg1.jpg', content: '' },
         { image: '/gg2.jpg', content: '동화 내용 1ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ' },
         { image: '/gg3.jpg', content: '동화 내용 2ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ' },
         { image: '/gg4.jpg', content: '동화 내용 3ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ' },
@@ -35,7 +35,7 @@ function ReadStoryPage() {
         { image: '/gg9.jpg', content: '동화 내용 8' },
         { image: '/gg10.jpg', content: '동화 내용 9' },
         { image: '/gg11.jpg', content: '동화 내용 10' },
-        { content: 'Created by 사용자 1' } // Last page with only content
+        { content: 'Created by 사용자 1' }
       ]
     };
     setStory(mockStory);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Typography, Paper } from '@mui/material';
-import axios from 'axios';
+// import axios from 'axios';
 
 const Write1 = () => {
   const navigate = useNavigate();
@@ -11,22 +11,26 @@ const Write1 = () => {
   const [sentence, setSentence] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/stories/${storyId}/contents/1`);
-        const { options } = response.data;
-        if (options && options.length > 0) {
-          setSentence(options[0]);
-        } else {
-          setSentence("No content available.");
-        }
-      } catch (error) {
-        console.error('Error fetching story content:', error);
-        setSentence("Failed to fetch content.");
-      }
-    };
+    // 서버에서 선택한 문장을 가져오는 코드 (주석 처리)
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.get(`http://127.0.0.1:8000/api/stories/${storyId}/contents/1`);
+    //     const { options } = response.data;
+    //     if (options && options.length > 0) {
+    //       setSentence(options[0]);
+    //     } else {
+    //       setSentence("No content available.");
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching story content:', error);
+    //     setSentence("Failed to fetch content.");
+    //   }
+    // };
 
-    fetchData();
+    // fetchData();
+
+    // 더미 데이터를 사용하여 첫 번째 문장 설정
+    setSentence("이것은 첫 번째 페이지의 문장입니다.");
   }, [storyId]);
 
   const handleNext = () => {

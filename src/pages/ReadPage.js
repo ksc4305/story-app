@@ -5,22 +5,25 @@ import SearchIcon from '@mui/icons-material/Search';
 import StoryBox from '../components/StoryBox';
 import './ReadPage.css';
 import useLikes from '../hooks/useLikes';
-// import axios from 'axios'; // 서버 사용 시 주석 해제
+import { useDispatch, useSelector } from 'react-redux';
+import { setStories } from '../store/storySlice';
 
 function ReadPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [stories, setStories] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const stories = useSelector((state) => state.story.stories);
   const { likes, likedStories, handleLikeClick } = useLikes(stories);
 
   useEffect(() => {
     // axios.get('/api/stories') // 서버 사용 시 주석 해제
     //   .then(response => {
-    //     setStories(response.data);
+    //     dispatch(setStories(response.data));
     //   })
     //   .catch(error => {
     //     console.error('There was an error fetching the stories!', error);
     //   });
+
     const mockStories = [
       { _id: '1', cover_image_url: '/gg1.jpg', title: '동화 제목 1', author: '사용자 1', clicks: 5 },
       { _id: '2', cover_image_url: '/gg2.jpg', title: '동화 제목 2', author: '사용자 2', clicks: 3 },
@@ -35,8 +38,8 @@ function ReadPage() {
       { _id: '11', cover_image_url: '/gg11.jpg', title: '동화 제목 11', author: '사용자 11', clicks: 11 },
       { _id: '12', cover_image_url: '/gg1.jpg', title: '동화 제목 12', author: '사용자 12', clicks: 12 },
     ];
-    setStories(mockStories);
-  }, []);
+    dispatch(setStories(mockStories));
+  }, [dispatch]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);

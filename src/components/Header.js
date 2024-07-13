@@ -16,7 +16,9 @@ function Header() {
           그린나래
         </Typography>
         <Button color="inherit" component={NavLink} to="/" exact="true" className="nav-link" activeclassname="active-nav-link">홈</Button>
-        <Button color="inherit" component={NavLink} to="/instructions" className="nav-link" activeclassname="active-nav-link">소개</Button>
+        {/* <Button color="inherit" component={NavLink} to="/instructions" className="nav-link" activeclassname="active-nav-link">소개</Button> */}
+        <Button color="inherit" component={NavLink} to="/final" className="nav-link" activeclassname="active-nav-link">소개</Button> {/* 링크 변경 */}
+
         <Button color="inherit" component={NavLink} to="/read" className="nav-link" activeclassname="active-nav-link">Read</Button>
         <Button color="inherit" component={NavLink} to="/write" className="nav-link" activeclassname="active-nav-link">Write</Button>
         <Button color="inherit" component={NavLink} to="/login" className="nav-link" activeclassname="active-nav-link" sx={{ backgroundColor: 'lightgrey', color: 'black', '&:hover': { backgroundColor: 'lightgrey' } }}>로그인</Button>
