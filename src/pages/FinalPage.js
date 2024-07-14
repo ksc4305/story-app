@@ -42,7 +42,7 @@ const FinalPage = () => {
     // } catch (error) {
     //   console.error('Error finalizing story:', error);
     // }
-    alert('이야기가 성공적으로 저장되었습니다.'); // 예시용 알림
+    navigate(`/imageSelection?story_id=${storyId}`);
   };
 
   const handleClick = (index) => {

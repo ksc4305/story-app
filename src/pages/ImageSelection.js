@@ -1,153 +1,155 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Typography, Paper } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateSelectedImage } from '../store/storySlice'; // 이미지 선택을 저장하는 리덕스 액션
 
-function ImageSelection() {
-    const navigate = useNavigate();
-    const location = useLocation(); // 스토리 내용을 가져오기 위해 사용
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [images, setImages] = useState([
-        { id: 1, src: 'path/to/image1.jpg', alt: 'Image 1' },
-        { id: 2, src: 'path/to/image2.jpg', alt: 'Image 2' },
-        { id: 3, src: 'path/to/image3.jpg', alt: 'Image 3' },
-        { id: 4, src: 'path/to/image4.jpg', alt: 'Image 4' }
-    ]);
+const ImageSelection = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const storyId = queryParams.get('story_id');
+  const initialPage = queryParams.get('page') ? parseInt(queryParams.get('page')) : 1;
+  const dispatch = useDispatch();
+  const selectedImages = useSelector((state) => state.story.selectedImages);
 
-    const handleImageSelect = (imageId) => {
-        setSelectedImage(imageId);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [story, setStory] = useState('');
+  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(selectedImages[currentPage] || '');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // 서버 요청 부분 주석 처리
+      // try {
+      //   const storyResponse = await axios.get(`http://localhost:8000/api/stories/${storyId}/contents/${currentPage}`);
+      //   const imageResponse = await axios.get(`http://localhost:8000/api/images/${currentPage}`);
+      //   setStory(storyResponse.data.story);
+      //   setImages(imageResponse.data.images);
+      // } catch (error) {
+      //   console.error('Error fetching content:', error);
+      // }
+
+      // 더미 데이터를 사용
+      setStory(`이것은 ${currentPage}번째 페이지의 이야기입니다.`);
+      setImages([
+        'https://via.placeholder.com/150?text=Image+1',
+        'https://via.placeholder.com/150?text=Image+2',
+        'https://via.placeholder.com/150?text=Image+3',
+        'https://via.placeholder.com/150?text=Image+4'
+      ]);
     };
 
-    const handlePrevious = () => {
-        navigate(-1); // 이전 페이지로 이동
-    };
+    fetchData();
+  }, [currentPage, storyId]);
 
-    const handleNext = () => {
-        if (selectedImage !== null) {
-            navigate('/nextPage', { state: { selectedImage: images.find(img => img.id === selectedImage) } });
-        }
-    };
+  const handleImageSelect = (image) => {
+    setSelectedImage(image);
+  };
 
-    return (
-        <Box sx={{ padding: 2, textAlign: 'center' }}>
-            <Typography variant="h4" gutterBottom>지금부터 문단에 어울리는 이미지를 선택하세요!</Typography>
-            <Typography>{location.state?.text}</Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 2, mt: 2 }}>
-                {images.map(image => (
-                    <Paper
-                        key={image.id}
-                        component="img"
-                        src={image.src}
-                        alt={image.alt}
-                        sx={{
-                            width: 100,
-                            height: 100,
-                            cursor: 'pointer',
-                            border: selectedImage === image.id ? '2px solid blue' : 'none'
-                        }}
-                        onClick={() => handleImageSelect(image.id)}
-                    />
-                ))}
-            </Box>
-            <Button variant="contained" onClick={handlePrevious} sx={{ mt: 2 }}>이전</Button>
-            <Button variant="contained" color="primary" onClick={handleNext} disabled={!selectedImage} sx={{ mt: 2, ml: 2 }}>다음</Button>
+  const handleNext = () => {
+    if (selectedImage) {
+      dispatch(updateSelectedImage({ page: currentPage, image: selectedImage }));
+      if (currentPage < 10) {
+        setCurrentPage(currentPage + 1);
+        setSelectedImage('');
+        navigate(`/imageSelection?story_id=${storyId}&page=${currentPage + 1}`);
+      } else {
+        navigate(`/finalCover?story_id=${storyId}`);
+      }
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      dispatch(updateSelectedImage({ page: currentPage, image: selectedImage }));
+      setCurrentPage(currentPage - 1);
+      setSelectedImage('');
+      navigate(`/imageSelection?story_id=${storyId}&page=${currentPage - 1}`);
+    }
+  };
+
+  const handleStart = () => {
+    // '시작' 버튼 클릭 시 첫 번째 페이지로 이동
+    setCurrentPage(1);
+    navigate(`/imageSelection?story_id=${storyId}&page=1`);
+  };
+
+  return (
+    <Box sx={{ width: '100%', minHeight: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2 }}>
+      {currentPage === 0 ? (
+        <>
+          <Typography variant="h4" sx={{ mb: 4 }}>
+            지금부터 내용에 어울리는 이미지를 선택하세요!
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: 'lightgreen',
+              '&:hover': {
+                bgcolor: 'rgba(144,238,144,0.5)',
+              },
+              '&:active': {
+                bgcolor: 'rgba(144,238,144,0.8)',
+              },
+            }}
+            onClick={handleStart}
+          >
+            시작
+          </Button>
+        </>
+      ) : (
+        <Box sx={{ width: '100%', maxWidth: 500, mt: 4, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <Paper elevation={3} sx={{ p: 2, mb: 4 }}>
+            <Typography variant="h6">{story}</Typography>
+          </Paper>
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 4 }}>
+            {images.map((image, index) => (
+              <Paper
+                key={index}
+                sx={{
+                  p: 1,
+                  cursor: 'pointer',
+                  border: selectedImage === image ? '2px solid lightgreen' : '2px solid transparent',
+                  transition: 'border 0.3s',
+                }}
+                onClick={() => handleImageSelect(image)}
+              >
+                <img src={image} alt={`option-${index}`} style={{ width: '100%', height: 'auto' }} />
+              </Paper>
+            ))}
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <Button
+              variant="contained"
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              sx={{
+                bgcolor: 'lightgreen',
+                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+              }}
+            >
+              이전
+            </Button>
+            <Typography>{currentPage} / 10</Typography>
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={!selectedImage}
+              sx={{
+                bgcolor: 'lightgreen',
+                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+              }}
+            >
+              다음
+            </Button>
+          </Box>
         </Box>
-    );
-}
+      )}
+    </Box>
+  );
+};
 
 export default ImageSelection;
-// import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useStory } from '../contexts/StoryContext';
-// import { Box, Button, Typography, Grid, Card, CardMedia, CardContent } from '@mui/material';
-
-// // 이미지 URL을 가져오는 함수 (실제로는 API 호출 등으로 대체)
-// const getImagesForOption = (option) => {
-//   // 예시 이미지 URL들
-//   return [
-//     'https://example.com/image1.jpg',
-//     'https://example.com/image2.jpg',
-//     'https://example.com/image3.jpg',
-//   ];
-// };
-
-// function ImageSelection() {
-//   const navigate = useNavigate();
-//   const { selectedOptions } = useStory();
-//   const [selectedImages, setSelectedImages] = useState({});
-//   const [currentOptionIndex, setCurrentOptionIndex] = useState(0);
-
-//   useEffect(() => {
-//     // 컴포넌트 마운트 시 첫 번째 옵션에 대한 이미지 로드
-//     if (selectedOptions.length > 0) {
-//       setSelectedImages({
-//         [currentOptionIndex]: getImagesForOption(selectedOptions[currentOptionIndex])
-//       });
-//     }
-//   }, []);
-
-//   const handleImageSelect = (imageUrl) => {
-//     setSelectedImages(prev => ({
-//       ...prev,
-//       [currentOptionIndex]: imageUrl
-//     }));
-//   };
-
-//   const handleNext = () => {
-//     if (currentOptionIndex < selectedOptions.length - 1) {
-//       const nextIndex = currentOptionIndex + 1;
-//       setCurrentOptionIndex(nextIndex);
-//       if (!selectedImages[nextIndex]) {
-//         setSelectedImages(prev => ({
-//           ...prev,
-//           [nextIndex]: getImagesForOption(selectedOptions[nextIndex])
-//         }));
-//       }
-//     } else {
-//       // 모든 이미지 선택 완료, 다음 단계로 진행
-//       navigate('/finalStory');
-//     }
-//   };
-
-//   const handlePrevious = () => {
-//     if (currentOptionIndex > 0) {
-//       setCurrentOptionIndex(currentOptionIndex - 1);
-//     }
-//   };
-
-//   return (
-//     <Box sx={{ padding: 2 }}>
-//       <Typography variant="h4" gutterBottom>삽화 선택</Typography>
-//       <Typography variant="body1" gutterBottom>{selectedOptions[currentOptionIndex]}</Typography>
-      
-//       <Grid container spacing={2}>
-//         {selectedImages[currentOptionIndex]?.map((imageUrl, index) => (
-//           <Grid item xs={4} key={index}>
-//             <Card 
-//               onClick={() => handleImageSelect(imageUrl)}
-//               sx={{ border: selectedImages[currentOptionIndex] === imageUrl ? '2px solid blue' : 'none' }}
-//             >
-//               <CardMedia
-//                 component="img"
-//                 height="140"
-//                 image={imageUrl}
-//                 alt={`Option ${currentOptionIndex + 1} Image ${index + 1}`}
-//               />
-//               <CardContent>
-//                 <Typography variant="body2">이미지 {index + 1}</Typography>
-//               </CardContent>
-//             </Card>
-//           </Grid>
-//         ))}
-//       </Grid>
-
-//       <Box sx={{ mt: 2 }}>
-//         <Button variant="contained" onClick={handlePrevious} disabled={currentOptionIndex === 0}>이전</Button>
-//         <Button variant="contained" onClick={handleNext} disabled={!selectedImages[currentOptionIndex]}>
-//           {currentOptionIndex === selectedOptions.length - 1 ? '완료' : '다음'}
-//         </Button>
-//       </Box>
-//     </Box>
-//   );
-// }
-
-// export default ImageSelection;
