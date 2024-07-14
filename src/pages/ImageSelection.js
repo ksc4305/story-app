@@ -16,7 +16,7 @@ const ImageSelection = () => {
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [story, setStory] = useState('');
   const [images, setImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(selectedImages[currentPage] || '');
+  const [selectedImage, setSelectedImage] = useState(selectedImages[currentPage - 1] || '');
 
   useEffect(() => {
     const fetchData = async () => {

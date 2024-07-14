@@ -4,7 +4,7 @@ const storySlice = createSlice({
   name: 'story',
   initialState: {
     selectedOptions: {},
-    selectedImages: {}, // 이미지 선택 상태 추가
+    selectedImages: Array(10).fill(null), // 길이 10인 배열로 초기화
     stories: [],
   },
   reducers: {
@@ -23,11 +23,11 @@ const storySlice = createSlice({
     },
     updateSelectedImage: (state, action) => {
       const { page, image } = action.payload;
-      state.selectedImages[page] = image;
-    }, // 이미지 선택 액션 추가
+      state.selectedImages[page - 1] = image; // 배열의 인덱스는 0부터 시작하므로 page - 1
+    },
     resetSelectedImages: (state) => {
-      state.selectedImages = {};
-    }, // 이미지 선택 초기화 액션 추가
+      state.selectedImages = Array(10).fill(null); // 배열로 초기화
+    },
   },
 });
 
