@@ -4,7 +4,7 @@ import { Typography, Box, IconButton, Button } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-// import axios from 'axios'; // 서버 사용 시 주석 해제
+import axios from 'axios'; // 서버 사용 시 주석 해제
 
 function WriteStoryPage() {
   const { storyId } = useParams();
@@ -13,7 +13,8 @@ function WriteStoryPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
-    // axios.get(`/api/stories/${storyId}`) // 서버 사용 시 주석 해제
+    // 서버에서 데이터를 가져오는 코드 (주석 해제하여 사용)
+    // axios.get(`/api/stories/${storyId}`)
     //   .then(response => {
     //     setStory(response.data);
     //   })
@@ -24,21 +25,37 @@ function WriteStoryPage() {
     // 더미 데이터를 사용하여 이야기와 이미지를 설정합니다.
     const mockStory = {
       id: storyId,
-      creator: '사용자 1',
-      pages: [
-        { image: '/gg1.jpg', content: '' },
-        { image: '/gg2.jpg', content: '동화 내용 1ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ' },
-        { image: '/gg3.jpg', content: '동화 내용 2ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ' },
-        { image: '/gg4.jpg', content: '동화 내용 3ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ' },
-        { image: '/gg5.jpg', content: '동화 내용 4ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ' },
-        { image: '/gg6.jpg', content: '동화 내용 5' },
-        { image: '/gg7.jpg', content: '동화 내용 6' },
-        { image: '/gg8.jpg', content: '동화 내용 7' },
-        { image: '/gg9.jpg', content: '동화 내용 8' },
-        { image: '/gg10.jpg', content: '동화 내용 9' },
-        { image: '/gg11.jpg', content: '동화 내용 10' },
-        { content: 'Created by 사용자 1' }
-      ]
+      title: '동화 제목',
+      author: '사용자 1',
+      cover_image: '/cover.jpg',
+      contents: [
+        '', 
+        '동화 내용 1ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ', 
+        '동화 내용 2ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ',
+        '동화 내용 3ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ',
+        '동화 내용 4ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
+        '동화 내용 5',
+        '동화 내용 6',
+        '동화 내용 7',
+        '동화 내용 8',
+        '동화 내용 9',
+        '동화 내용 10',
+        'Created by 사용자 1'
+      ],
+      images: [
+        '/gg1.jpg',
+        '/gg2.jpg',
+        '/gg3.jpg',
+        '/gg4.jpg',
+        '/gg5.jpg',
+        '/gg6.jpg',
+        '/gg7.jpg',
+        '/gg8.jpg',
+        '/gg9.jpg',
+        '/gg10.jpg',
+        '/gg11.jpg'
+      ],
+      created_date: '2023-07-14'
     };
     setStory(mockStory);
   }, [storyId]);
@@ -47,7 +64,7 @@ function WriteStoryPage() {
     return <div>Loading...</div>;
   }
 
-  const totalPages = story.pages.length;
+  const totalPages = story.contents.length;
 
   const handleNextPage = () => {
     if (currentPage < totalPages - 1) {
@@ -74,11 +91,11 @@ function WriteStoryPage() {
           <ArrowBackIosIcon />
         </IconButton>
         <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 16px' }}>
-          {story.pages[currentPage].image && (
-            <img src={story.pages[currentPage].image} alt="Story" style={{ maxWidth: '100%', height: 'auto', marginBottom: '16px' }} />
+          {story.images[currentPage] && (
+            <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '100%', height: 'auto', marginBottom: '16px' }} />
           )}
           <Typography variant="body1" style={{ marginBottom: '16px' }}>
-            {story.pages[currentPage].content}
+            {story.contents[currentPage]}
           </Typography>
           <Typography variant="body1">{currentPage + 1}/{totalPages}</Typography>
         </Box>
