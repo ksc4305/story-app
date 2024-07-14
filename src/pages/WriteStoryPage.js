@@ -20,6 +20,8 @@ function WriteStoryPage() {
     //   .catch(error => {
     //     console.error('There was an error fetching the story!', error);
     //   });
+
+    // 더미 데이터를 사용하여 이야기와 이미지를 설정합니다.
     const mockStory = {
       id: storyId,
       creator: '사용자 1',
