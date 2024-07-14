@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
+import axios from "axios";
 // import axios from 'axios';
 
 const FinalPage = () => {
@@ -27,7 +28,7 @@ const FinalPage = () => {
 
     // 예시 데이터를 사용하여 10가지 내용을 출력
     const initialSentence = "이것은 첫 번째 페이지의 문장입니다."; // 첫 번째 페이지 문장 추가
-    const allSentences = [initialSentence, ...Object.values(selectedOptions)];
+    const allSentences = [...Object.values(selectedOptions)];
     setSentences(allSentences);
   }, [selectedOptions]);
 
@@ -36,6 +37,18 @@ const FinalPage = () => {
   };
 
   const handleCreate = async () => {
+      const data = {
+          contents: sentences
+      }
+      await axios.post(`http://localhost:8000/api/sse/stories/${storyId}/contents`, data)
+          .then(res => {
+              console.log(res);
+              alert('이야기가 성공적으로 저장되었습니다.'); // 예시용 알림
+              navigate(`/images/`, {state: storyId});
+          })
+          .catch(err => {
+              console.log(err);
+          })
     // 서버에 선택한 항목들을 최종 저장하는 코드 (주석 처리)
     // try {
     //   await axios.post(`http://127.0.0.1:8000/api/stories/${storyId}/contents/final`, { sentences });
@@ -43,7 +56,7 @@ const FinalPage = () => {
     // } catch (error) {
     //   console.error('Error finalizing story:', error);
     // }
-    alert('이야기가 성공적으로 저장되었습니다.'); // 예시용 알림
+
   };
 
   const handleClick = (index) => {

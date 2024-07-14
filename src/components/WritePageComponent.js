@@ -90,7 +90,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
         <Typography variant="h5" sx={{ mb: 2 }}>Page.{currentPage}</Typography>
         {currentPage === 1 ? (
           <Typography variant="body1" sx={{ mb: 2 }}>
-            {options[0]}
+            {options}
           </Typography>
         ) : (
           options.map((option, index) => (
