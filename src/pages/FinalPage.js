@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-// import axios from 'axios';
+import axios from "axios";
 
 const FinalPage = () => {
   const navigate = useNavigate();
@@ -36,13 +36,17 @@ const FinalPage = () => {
 
   const handleCreate = async () => {
     // 서버에 선택한 항목들을 최종 저장하는 코드 (주석 처리)
-    // try {
-    //   await axios.post(`http://127.0.0.1:8000/api/stories/${storyId}/contents/final`, { sentences });
-    //   alert('이야기가 성공적으로 저장되었습니다.');
-    // } catch (error) {
-    //   console.error('Error finalizing story:', error);
-    // }
-    navigate(`/imageSelection?story_id=${storyId}`);
+      const data = {
+          contents: sentences
+      }
+    try {
+      await axios.post(`http://127.0.0.1:8000/api/sse/stories/${storyId}/contents`, data);
+      alert('이야기가 성공적으로 저장되었습니다.');
+      navigate(`/imageSelection?story_id=${storyId}`);
+    } catch (error) {
+      console.error('Error finalizing story:', error);
+    }
+
   };
 
   const handleClick = (index) => {
