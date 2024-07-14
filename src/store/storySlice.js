@@ -5,6 +5,9 @@ const storySlice = createSlice({
   initialState: {
     selectedOptions: {},
     selectedImages: Array(10).fill(null), // 길이 10인 배열로 초기화
+    coverImage: '', // 표지 이미지 상태 추가
+    creator: '', // 작가 상태 추가
+    title: '', // 제목 상태 추가
     stories: [],
   },
   reducers: {
@@ -28,8 +31,40 @@ const storySlice = createSlice({
     resetSelectedImages: (state) => {
       state.selectedImages = Array(10).fill(null); // 배열로 초기화
     },
+    updateCoverImage: (state, action) => {
+      state.coverImage = action.payload; // 표지 이미지 업데이트
+    },
+    updateCreator: (state, action) => {
+      state.creator = action.payload; // 작가 업데이트
+    },
+    updateTitle: (state, action) => {
+      state.title = action.payload; // 제목 업데이트
+    },
+    resetCoverImage: (state) => {
+      state.coverImage = ''; // 표지 이미지 초기화
+    },
+    resetCreator: (state) => {
+      state.creator = ''; // 작가 초기화
+    },
+    resetTitle: (state) => {
+      state.title = ''; // 제목 초기화
+    },
   },
 });
 
-export const { setSelectedOptions, updateSelectedOption, resetSelectedOptions, setStories, updateSelectedImage, resetSelectedImages } = storySlice.actions;
+export const {
+  setSelectedOptions,
+  updateSelectedOption,
+  resetSelectedOptions,
+  setStories,
+  updateSelectedImage,
+  resetSelectedImages,
+  updateCoverImage,
+  updateCreator,
+  updateTitle,
+  resetCoverImage,
+  resetCreator,
+  resetTitle,
+} = storySlice.actions;
+
 export default storySlice.reducer;

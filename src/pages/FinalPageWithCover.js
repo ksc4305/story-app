@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateSelectedImage } from '../store/storySlice'; // 이미지 선택을 저장하는 리덕스 액션
+import { updateSelectedImage, updateCoverImage, updateCreator, updateTitle } from '../store/storySlice'; // 추가된 리덕스 액션
+import axios from 'axios';
 
 const FinalPageWithCover = () => {
   const navigate = useNavigate();
@@ -11,11 +12,11 @@ const FinalPageWithCover = () => {
   const storyId = queryParams.get('story_id');
   const dispatch = useDispatch();
   const selectedImages = useSelector((state) => state.story.selectedImages);
+  const creator = useSelector((state) => state.story.creator);
+  const title = useSelector((state) => state.story.title);
+  const coverImage = useSelector((state) => state.story.coverImage);
 
-  const [creator, setCreator] = useState('');
-  const [title, setTitle] = useState('');
   const [coverImages, setCoverImages] = useState([]);
-  const [selectedCover, setSelectedCover] = useState('');
 
   useEffect(() => {
     // 더미 데이터를 사용하여 표지 이미지를 설정합니다.
@@ -28,16 +29,24 @@ const FinalPageWithCover = () => {
   }, []);
 
   const handleCoverSelect = (cover) => {
-    setSelectedCover(cover);
+    dispatch(updateCoverImage(cover)); // 선택한 표지 이미지를 리덕스 상태에 저장
   };
 
   const handlePrevious = () => {
     navigate(`/imageSelection?story_id=${storyId}&page=10`);
   };
 
-  const handleComplete = () => {
-    // 완료 버튼 클릭 시 음성 선택 페이지로 이동
-    navigate(`/voiceSelection?story_id=${storyId}`);
+  const handleComplete = async () => {
+    try {
+      await axios.post(`/api/stories/${storyId}/final`, {
+        title,
+        author: creator,
+        cover_image: coverImage
+      });
+      navigate(`/voiceSelection?story_id=${storyId}`);
+    } catch (error) {
+      console.error('Error saving final story data:', error);
+    }
   };
 
   return (
@@ -48,7 +57,7 @@ const FinalPageWithCover = () => {
           fullWidth
           variant="outlined"
           value={creator}
-          onChange={(e) => setCreator(e.target.value)}
+          onChange={(e) => dispatch(updateCreator(e.target.value))}
           sx={{ mb: 2 }}
         />
         <TextField
@@ -56,7 +65,7 @@ const FinalPageWithCover = () => {
           fullWidth
           variant="outlined"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => dispatch(updateTitle(e.target.value))}
           sx={{ mb: 4 }}
         />
         <Typography variant="h6" sx={{ mb: 2 }}>표지</Typography>
@@ -67,7 +76,7 @@ const FinalPageWithCover = () => {
               sx={{
                 p: 1,
                 cursor: 'pointer',
-                border: selectedCover === cover ? '2px solid lightgreen' : '2px solid transparent',
+                border: coverImage === cover ? '2px solid lightgreen' : '2px solid transparent',
                 transition: 'border 0.3s',
               }}
               onClick={() => handleCoverSelect(cover)}
@@ -91,7 +100,7 @@ const FinalPageWithCover = () => {
           <Button
             variant="contained"
             onClick={handleComplete}
-            disabled={!creator || !title || !selectedCover}
+            disabled={!creator || !title || !coverImage}
             sx={{
               bgcolor: 'lightgreen',
               '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },

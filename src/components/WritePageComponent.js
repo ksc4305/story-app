@@ -1,166 +1,118 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Typography, Paper } from '@mui/material';
-import { fetchStoryContent } from '../services/storyService';
-import { updateSelectedOption } from '../store/storySlice';
-import axios from "axios";
+import { Box, Button, TextField, Typography, Paper } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateSelectedImage, updateCoverImage, updateCreator, updateTitle } from '../store/storySlice'; // 추가된 리덕스 액션
+import axios from 'axios';
 
-const WritePageComponent = ({ currentPage, nextPage }) => {
+const FinalPageWithCover = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const storyId = queryParams.get('story_id');
-  const fromFinalParam = queryParams.get('fromFinal');
   const dispatch = useDispatch();
-  const selectedOptions = useSelector((state) => state.story.selectedOptions);
-  const [options, setOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('');
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
-  const [fromFinal, setFromFinal] = useState(false);
+  const selectedImages = useSelector((state) => state.story.selectedImages);
+  const creator = useSelector((state) => state.story.creator);
+  const title = useSelector((state) => state.story.title);
+  const coverImage = useSelector((state) => state.story.coverImage);
 
-  //선택한 옵션들 로그 표시
-  useEffect(() => {
-    console.log(selectedOptions)
-  }, [selectedOptions]);
+  const [coverImages, setCoverImages] = useState([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      const options = await fetchStoryContent(storyId, currentPage);
-      setOptions(options);
+    // 더미 데이터를 사용하여 표지 이미지를 설정합니다.
+    setCoverImages([
+      'https://via.placeholder.com/150?text=Cover+1',
+      'https://via.placeholder.com/150?text=Cover+2',
+      'https://via.placeholder.com/150?text=Cover+3',
+      'https://via.placeholder.com/150?text=Cover+4'
+    ]);
+  }, []);
 
-      // 현재 페이지가 1이면 하나밖에 없는 옵션 선택
-      if(currentPage === 1){
-        setSelectedOption(options[0]);
-      }
-    };
-
-    loadData();
-    if (fromFinalParam) {
-      setFromFinal(true);
-    }
-  }, [currentPage, storyId, fromFinalParam]);
-
-  const handleOptionSelect = (option, index) => {
-    setSelectedOption(option);
-    setSelectedOptionIndex(index);
-  };
-
-  const handleNext = () => {
-    if (!selectedOption && currentPage !== 1) return;
-    dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
-    setSelectedOption(''); // 다음 페이지로 넘어갈 때 선택지 초기화
-
-    const data = {
-      options: options,
-      selected_option_index: selectedOptionIndex
-    }
-    axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-
-    if (currentPage === 10) {
-      navigate(`/final?story_id=${storyId}`);
-    } else {
-      navigate(`/write/${nextPage}?story_id=${storyId}`);
-    }
-  };
-
-  const handleComplete = () => {
-    dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
-    navigate(`/final?story_id=${storyId}`);
+  const handleCoverSelect = (cover) => {
+    dispatch(updateCoverImage(cover)); // 선택한 표지 이미지를 리덕스 상태에 저장
   };
 
   const handlePrevious = () => {
-    if (currentPage > 1) {
-      setSelectedOption(''); // 이전 페이지로 돌아갈 때 선택지 초기화
-      navigate(`/write/${currentPage - 1}?story_id=${storyId}`);
+    navigate(`/imageSelection?story_id=${storyId}&page=10`);
+  };
+
+  const handleComplete = async () => {
+    try {
+      await axios.post(`/api/stories/${storyId}/final`, {
+        title,
+        author: creator,
+        cover_image: coverImage
+      });
+      navigate(`/voiceSelection?story_id=${storyId}`);
+    } catch (error) {
+      console.error('Error saving final story data:', error);
     }
   };
 
   return (
-    <Box sx={{ width: 300, mx: 'auto', mt: 4, textAlign: 'center' }}>
-      <Paper elevation={3} sx={{ p: 2 }}>
-        <Typography variant="h5" sx={{ mb: 2 }}>Page.{currentPage}</Typography>
-        {currentPage === 1 ? (
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            {options[0]}
-          </Typography>
-        ) : (
-          options.map((option, index) => (
+    <Box sx={{ width: '100%', minHeight: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2 }}>
+      <Box sx={{ width: '100%', maxWidth: 500, mt: 4, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <TextField
+          label="제작자"
+          fullWidth
+          variant="outlined"
+          value={creator}
+          onChange={(e) => dispatch(updateCreator(e.target.value))}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="제목"
+          fullWidth
+          variant="outlined"
+          value={title}
+          onChange={(e) => dispatch(updateTitle(e.target.value))}
+          sx={{ mb: 4 }}
+        />
+        <Typography variant="h6" sx={{ mb: 2 }}>표지</Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 4 }}>
+          {coverImages.map((cover, index) => (
             <Paper
               key={index}
-              elevation={3}
               sx={{
-                mb: 2,
-                p: 2,
+                p: 1,
                 cursor: 'pointer',
-                bgcolor: selectedOption === option ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                '&:hover': {
-                  bgcolor: 'rgba(144,238,144,0.5)',
-                },
-                '&:active': {
-                  bgcolor: 'rgba(144,238,144,0.8)',
-                },
-                transition: 'background-color 0.3s',
+                border: coverImage === cover ? '2px solid lightgreen' : '2px solid transparent',
+                transition: 'border 0.3s',
               }}
-              onClick={() => handleOptionSelect(option, index)}
+              onClick={() => handleCoverSelect(cover)}
             >
-              {option}
+              <img src={cover} alt={`cover-${index}`} style={{ width: '100%', height: 'auto' }} />
             </Paper>
-          ))
-        )}
-        {fromFinal ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <Button
-              variant="contained"
-              onClick={handleComplete}
-              sx={{
-                bgcolor: 'lightgreen',
-                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
-                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
-              }}
-            >
-              완료
-            </Button>
-          </Box>
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: currentPage === 1 ? 'center' : 'space-between', mt: 2 }}>
-            {currentPage !== 1 && (
-              <Button
-                variant="contained"
-                onClick={handlePrevious}
-                sx={{
-                  bgcolor: 'lightgreen',
-                  '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
-                  '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
-                }}
-              >
-                이전
-              </Button>
-            )}
-            <Button
-              variant="contained"
-              onClick={handleNext}
-              disabled={!selectedOption && currentPage !== 1}
-              sx={{
-                bgcolor: 'lightgreen',
-                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
-                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
-              }}
-            >
-              {currentPage === 10 ? '완료' : '다음'}
-            </Button>
-          </Box>
-        )}
-      </Paper>
-      <Typography sx={{ mt: 2 }}>페이지: {currentPage === 'final' ? '완료' : `${currentPage} / 10`}</Typography>
+          ))}
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Button
+            variant="contained"
+            onClick={handlePrevious}
+            sx={{
+              bgcolor: 'lightgreen',
+              '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+              '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+            }}
+          >
+            이전
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleComplete}
+            disabled={!creator || !title || !coverImage}
+            sx={{
+              bgcolor: 'lightgreen',
+              '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+              '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+            }}
+          >
+            완료
+          </Button>
+        </Box>
+      </Box>
     </Box>
   );
 };
 
-export default WritePageComponent;
+export default FinalPageWithCover;
