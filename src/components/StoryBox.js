@@ -14,7 +14,7 @@ function StoryBox({ story, likes, likedStories, onClick, onLikeClick }) {
       <Box className="icon-container">
         <Box className="icon">
           <VisibilityIcon />
-          <span>{story.clicks}</span>
+          {/* <span>{story.clicks}</span> */}
         </Box>
         <Box className="icon">
           <IconButton
