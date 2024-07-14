@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const fetchStoryContent = async (storyId, page) => {
   try {
-    const response = await axios.get(`/api/stories/${storyId}/contents/${page}`);
+    const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${page}/contents`);
     return response.data.options || [];
   } catch (error) {
     console.error('Error fetching story content:', error);

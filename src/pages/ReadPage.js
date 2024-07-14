@@ -19,7 +19,7 @@ function ReadPage() {
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        const response = await axios.get('/api/stories');
+        const response = await axios.get('http://localhost:8000/api/stories');
         dispatch(setStories(response.data));
       } catch (error) {
         console.error('There was an error fetching the stories!', error);
