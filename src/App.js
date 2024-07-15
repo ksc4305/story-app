@@ -14,6 +14,7 @@ import LoginPage from './pages/LoginPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import './App.css';
+import TestPage from "./pages/TestPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/read" element={<ReadPage />} />
         <Route path="/read/:storyId" element={<ReadStoryPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/test" element={<TestPage />} />
       </Routes>
       <Footer />
     </Router>
