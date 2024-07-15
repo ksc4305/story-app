@@ -19,13 +19,22 @@ const FinalPageWithCover = () => {
   const [coverImages, setCoverImages] = useState([]);
 
   useEffect(() => {
+    axios.get(`http://localhost:8000/api/stories/${storyId}/covers`)
+        .then(res => {
+          console.log(`cover options`, res.data.options);
+          setCoverImages(res.data.options);
+
+        })
+        .catch(err => {
+          console.log(err);
+        })
     // 더미 데이터를 사용하여 표지 이미지를 설정합니다.
-    setCoverImages([
-      'https://via.placeholder.com/150?text=Cover+1',
-      'https://via.placeholder.com/150?text=Cover+2',
-      'https://via.placeholder.com/150?text=Cover+3',
-      'https://via.placeholder.com/150?text=Cover+4'
-    ]);
+    // setCoverImages([
+    //   'https://via.placeholder.com/150?text=Cover+1',
+    //   'https://via.placeholder.com/150?text=Cover+2',
+    //   'https://via.placeholder.com/150?text=Cover+3',
+    //   'https://via.placeholder.com/150?text=Cover+4'
+    // ]);
   }, []);
 
   const handleCoverSelect = (cover) => {
@@ -38,8 +47,8 @@ const FinalPageWithCover = () => {
 
   const handleComplete = async () => {
     try {
-      await axios.post(`/api/stories/${storyId}/final`, {
-        title,
+      await axios.post(`http://localhost:8000/api/stories/${storyId}/final`, {
+        title: title,
         author: creator,
         cover_image: coverImage
       });

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateSelectedImage } from '../store/storySlice'; // 이미지 선택을 저장하는 리덕스 액션
+import { updateSelectedImage } from '../store/storySlice';
+import axios from "axios"; // 이미지 선택을 저장하는 리덕스 액션
 
 const ImageSelection = () => {
   const navigate = useNavigate();
@@ -21,23 +22,22 @@ const ImageSelection = () => {
   useEffect(() => {
     const fetchData = async () => {
       // 서버 요청 부분 주석 처리
-      // try {
-      //   const storyResponse = await axios.get(`http://localhost:8000/api/stories/${storyId}/contents/${currentPage}`);
-      //   const imageResponse = await axios.get(`http://localhost:8000/api/images/${currentPage}`);
-      //   setStory(storyResponse.data.story);
-      //   setImages(imageResponse.data.images);
-      // } catch (error) {
-      //   console.error('Error fetching content:', error);
-      // }
+      try {
+        const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/images`);
+        setStory(response.data.content);
+        setImages(response.data.images);
+      } catch (error) {
+        console.error('Error fetching content:', error);
+      }
 
       // 더미 데이터를 사용
-      setStory(`이것은 ${currentPage}번째 페이지의 이야기입니다.`);
-      setImages([
-        'https://via.placeholder.com/150?text=Image+1',
-        'https://via.placeholder.com/150?text=Image+2',
-        'https://via.placeholder.com/150?text=Image+3',
-        'https://via.placeholder.com/150?text=Image+4'
-      ]);
+      // setStory(`이것은 ${currentPage}번째 페이지의 이야기입니다.`);
+      // setImages([
+      //   'https://via.placeholder.com/150?text=Image+1',
+      //   'https://via.placeholder.com/150?text=Image+2',
+      //   'https://via.placeholder.com/150?text=Image+3',
+      //   'https://via.placeholder.com/150?text=Image+4'
+      // ]);
     };
 
     fetchData();
@@ -55,7 +55,18 @@ const ImageSelection = () => {
         setSelectedImage('');
         navigate(`/imageSelection?story_id=${storyId}&page=${currentPage + 1}`);
       } else {
-        navigate(`/finalCover?story_id=${storyId}`);
+
+        const data = {
+          selected_images: selectedImages
+        }
+        axios.post(`http://localhost:8000/api/sse/stories/${storyId}/images`, data)
+            .then(res => {
+              navigate(`/finalCover?story_id=${storyId}`);
+            })
+            .catch(err => {
+              console.log(err);
+            })
+
       }
     }
   };
