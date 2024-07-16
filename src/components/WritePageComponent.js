@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Typography, Paper } from '@mui/material';
-import { fetchStoryContent } from '../services/api';
+import { fetchStoryContent } from '../api';
 import { updateSelectedOption } from '../store/storySlice';
 import axios from "axios";
 

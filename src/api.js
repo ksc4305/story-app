@@ -24,3 +24,14 @@ export const getStory = async (storyId) => {
         throw error;
     }
 };
+
+// 이야기 내용 가져오기 함수
+export const fetchStoryContent = async (storyId, page) => {
+    try {
+        const response = await axios.get(`${API_URL}/stories/${storyId}/pages/${page}/contents`);
+        return response.data.options || [];
+    } catch (error) {
+        console.error('Error fetching story content:', error);
+        return [];
+    }
+};
