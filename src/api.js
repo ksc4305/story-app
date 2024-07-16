@@ -1,25 +1,26 @@
-// src/api.js
-// import axios from 'axios';
+import axios from 'axios';
 
-// const API_URL = 'https://your-server-url.com/api'; // 서버 URL로 변경하세요
+// FastAPI 서버의 기본 URL
+const API_URL = 'http://127.0.0.1:8000/api';
 
+// 이야기 저장 함수
 export const saveStory = async (storyData) => {
-    // 서버 통신 주석 처리
-    // const response = await axios.post(`${API_URL}/saveStory`, storyData);
-    // return response.data;
-    console.log("Story saved (mock):", storyData);
-    return storyData; // Mock response
+    try {
+        const response = await axios.post(`${API_URL}/stories`, storyData);
+        return response.data;
+    } catch (error) {
+        console.error('Error saving story:', error);
+        throw error;
+    }
 };
 
-export const getStory = async () => {
-    // 서버 통신 주석 처리
-    // const response = await axios.get(`${API_URL}/getStory`);
-    // return response.data;
-    const mockData = [
-        { page: 1, option: 'Option1' },
-        { page: 2, option: 'Option2' },
-        { page: 3, option: 'Option3' },
-    ]; // Mock data
-    console.log("Story fetched (mock):", mockData);
-    return mockData;
+// 이야기 가져오기 함수
+export const getStory = async (storyId) => {
+    try {
+        const response = await axios.get(`${API_URL}/stories/${storyId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching story:', error);
+        throw error;
+    }
 };

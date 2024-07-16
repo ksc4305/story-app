@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Typography, Paper } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateSelectedImage } from '../store/storySlice';
-import axios from "axios"; // 이미지 선택을 저장하는 리덕스 액션
+import axios from "axios";
 
 const ImageSelection = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const ImageSelection = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // 서버 요청 부분 주석 처리
+      // 실제 서버 요청 부분
       try {
         const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/images`);
         setStory(response.data.content);
@@ -55,18 +55,16 @@ const ImageSelection = () => {
         setSelectedImage('');
         navigate(`/imageSelection?story_id=${storyId}&page=${currentPage + 1}`);
       } else {
-
         const data = {
           selected_images: selectedImages
-        }
+        };
         axios.post(`http://localhost:8000/api/sse/stories/${storyId}/images`, data)
             .then(res => {
               navigate(`/finalCover?story_id=${storyId}`);
             })
             .catch(err => {
               console.log(err);
-            })
-
+            });
       }
     }
   };
@@ -81,7 +79,6 @@ const ImageSelection = () => {
   };
 
   const handleStart = () => {
-    // '시작' 버튼 클릭 시 첫 번째 페이지로 이동
     setCurrentPage(1);
     navigate(`/imageSelection?story_id=${storyId}&page=1`);
   };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Typography, Paper } from '@mui/material';
-import { fetchStoryContent } from '../services/storyService';
+import { fetchStoryContent } from '../services/api';
 import { updateSelectedOption } from '../store/storySlice';
 import axios from "axios";
 
@@ -19,7 +19,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
 
-  //선택한 옵션들 로그 표시
+  // 선택한 옵션들 로그 표시
   useEffect(() => {
     console.log(selectedOptions)
   }, [selectedOptions]);
@@ -54,14 +54,14 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     const data = {
       options: options,
       selected_option_index: selectedOptionIndex
-    }
+    };
     axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
         .then(res => {
           console.log(res);
         })
         .catch(err => {
           console.log(err);
-        })
+        });
 
     if (currentPage === 10) {
       navigate(`/final?story_id=${storyId}`);

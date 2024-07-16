@@ -7,7 +7,6 @@ import { resetSelectedOptions } from '../store/storySlice';
 import SelectField from '../components/SelectField';
 import './Write.css';
 import axios from "axios";
-// import axios from "axios";
 
 const Write = () => {
   const navigate = useNavigate();
@@ -75,22 +74,21 @@ const Write = () => {
     if (source.trim()) {
       dispatch(resetSelectedOptions());
 
-      //서버에 새로운 이야기를 초기화하는 코드 (김태현 테스트 완료)
+      // 서버에 새로운 이야기를 초기화하는 코드
       const data = {
         prompt: source
+      };
+
+      try {
+        const res = await axios.post("http://localhost:8000/api/sse/stories/init", data);
+        const storyId = res.data;
+        navigate(`/write/1?story_id=${storyId}`);
+      } catch (err) {
+        console.error(err);
       }
 
-      axios.post("http://localhost:8000/api/sse/stories/init", data)
-          .then(res => {
-            const storyId = res.data;
-            navigate(`/write/1?story_id=${storyId}`);
-          })
-          .catch(err => {
-            console.error(err);
-          });
-
       // 더미 데이터로 이야기 시작
-      //navigate(`/write/1?story_id=dummy_story_id`);
+      // navigate(`/write/1?story_id=dummy_story_id`);
     }
   };
 

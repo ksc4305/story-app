@@ -20,6 +20,26 @@ function ReadStoryPage() {
       } catch (error) {
         console.error('There was an error fetching the story!', error);
       }
+
+      // 더미 데이터를 사용
+      // const mockStory = {
+      //   id: storyId,
+      //   title: '동화 제목',
+      //   author: '저자',
+      //   contents: [
+      //     '첫 번째 페이지 내용',
+      //     '두 번째 페이지 내용',
+      //     '세 번째 페이지 내용',
+      //     // 추가 더미 데이터
+      //   ],
+      //   images: [
+      //     '/image1.jpg',
+      //     '/image2.jpg',
+      //     '/image3.jpg',
+      //     // 추가 더미 이미지
+      //   ],
+      // };
+      // setStory(mockStory);
     };
 
     fetchStory();

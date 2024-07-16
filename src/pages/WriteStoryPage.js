@@ -4,7 +4,7 @@ import { Typography, Box, IconButton, Button } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import axios from 'axios'; // 서버 사용 시 주석 해제
+import axios from 'axios';
 
 function WriteStoryPage() {
   const { storyId } = useParams();
@@ -13,7 +13,7 @@ function WriteStoryPage() {
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
-    // 서버에서 데이터를 가져오는 코드 (주석 해제하여 사용)
+    // 실제 서버에서 데이터를 가져오는 코드
     axios.get(`http://localhost:8000/api/stories/${storyId}`)
       .then(response => {
         setStory(response.data);
@@ -30,10 +30,10 @@ function WriteStoryPage() {
     //   cover_image: '/cover.jpg',
     //   contents: [
     //     '',
-    //     '동화 내용 1ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ',
-    //     '동화 내용 2ㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴㄴ',
-    //     '동화 내용 3ㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈㅈ',
-    //     '동화 내용 4ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
+    //     '동화 내용 1',
+    //     '동화 내용 2',
+    //     '동화 내용 3',
+    //     '동화 내용 4',
     //     '동화 내용 5',
     //     '동화 내용 6',
     //     '동화 내용 7',
@@ -57,7 +57,7 @@ function WriteStoryPage() {
     //   ],
     //   created_date: '2023-07-14'
     // };
-    //setStory(mockStory);
+    // setStory(mockStory);
   }, [storyId]);
 
   if (!story) {
@@ -79,7 +79,6 @@ function WriteStoryPage() {
   };
 
   const handlePublish = () => {
-    // 게시하기 버튼 클릭 시 실행할 작업
     alert('게시되었습니다!');
     navigate('/read');
   };

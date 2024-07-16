@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, Typography, Paper, IconButton } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { styled } from '@mui/system';
+import axios from 'axios';
 
 const VoiceSelection = () => {
   const navigate = useNavigate();
@@ -10,15 +10,21 @@ const VoiceSelection = () => {
   const queryParams = new URLSearchParams(location.search);
   const storyId = queryParams.get('story_id');
 
-  const [selectedVoice, setSelectedVoice] = useState('');
-  const [voiceList] = useState([
-    { image: 'https://via.placeholder.com/150?text=Voice+1', audio: 'voice1.mp3' },
-    { image: 'https://via.placeholder.com/150?text=Voice+2', audio: 'voice2.mp3' },
-    { image: 'https://via.placeholder.com/150?text=Voice+3', audio: 'voice3.mp3' },
-    { image: 'https://via.placeholder.com/150?text=Voice+4', audio: 'voice4.mp3' },
-    { image: 'https://via.placeholder.com/150?text=Voice+5', audio: 'voice5.mp3' },
-    { image: 'https://via.placeholder.com/150?text=Voice+6', audio: 'voice6.mp3' }
-  ]);
+  const [selectedVoice, setSelectedVoice] = useState(null);
+  const [voiceList, setVoiceList] = useState([]);
+
+  useEffect(() => {
+    const fetchVoices = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/voices');
+        setVoiceList(response.data);
+      } catch (error) {
+        console.error('Error fetching voices:', error);
+      }
+    };
+
+    fetchVoices();
+  }, []);
 
   const handleVoiceSelect = (voice) => {
     setSelectedVoice(voice);
@@ -28,8 +34,16 @@ const VoiceSelection = () => {
     navigate(`/finalCover?story_id=${storyId}`);
   };
 
-  const handleComplete = () => {
-    navigate(`/writeStory/${storyId}`);
+  const handleComplete = async () => {
+    if (selectedVoice) {
+      try {
+        await axios.post(`http://localhost:8000/api/stories/${storyId}/voices/${selectedVoice.id}`);
+        alert('음성이 성공적으로 저장되었습니다.');
+        navigate(`/writeStory/${storyId}`);
+      } catch (error) {
+        console.error('Error saving voice:', error);
+      }
+    }
   };
 
   return (
@@ -53,7 +67,7 @@ const VoiceSelection = () => {
               onClick={() => handleVoiceSelect(voice)}
             >
               <img src={voice.image} alt={`voice-${index}`} style={{ width: '100px', height: 'auto' }} />
-              <IconButton onClick={() => new Audio(voice.audio).play()}>
+              <IconButton onClick={(e) => { e.stopPropagation(); new Audio(voice.audio).play(); }}>
                 <PlayArrowIcon sx={{ color: 'purple' }} />
               </IconButton>
             </Paper>

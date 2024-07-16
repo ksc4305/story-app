@@ -14,7 +14,8 @@ function Home() {
   const { likes, likedStories, handleLikeClick } = useLikes(stories);
 
   useEffect(() => {
-    // axios.get('/api/stories') // 서버 사용 시 주석 해제
+    // 실제 서버에서 데이터를 가져올 때 주석 해제
+    // axios.get('/api/stories')
     //   .then(response => {
     //     dispatch(setStories(response.data));
     //   })
@@ -22,6 +23,7 @@ function Home() {
     //     console.error('There was an error fetching the stories!', error);
     //   });
 
+    // 더미 데이터 사용
     const mockStories = [
       { _id: '1', cover_image_url: '/gg1.jpg', title: '동화 제목 1', author: '사용자 1', clicks: 5 },
       { _id: '2', cover_image_url: '/gg2.jpg', title: '동화 제목 2', author: '사용자 2', clicks: 3 },

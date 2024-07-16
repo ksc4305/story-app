@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateSelectedImage, updateCoverImage, updateCreator, updateTitle } from '../store/storySlice'; // 추가된 리덕스 액션
+import { updateCoverImage, updateCreator, updateTitle } from '../store/storySlice';
 import axios from 'axios';
 
 const FinalPageWithCover = () => {
@@ -11,7 +11,6 @@ const FinalPageWithCover = () => {
   const queryParams = new URLSearchParams(location.search);
   const storyId = queryParams.get('story_id');
   const dispatch = useDispatch();
-  const selectedImages = useSelector((state) => state.story.selectedImages);
   const creator = useSelector((state) => state.story.creator);
   const title = useSelector((state) => state.story.title);
   const coverImage = useSelector((state) => state.story.coverImage);
@@ -21,13 +20,11 @@ const FinalPageWithCover = () => {
   useEffect(() => {
     axios.get(`http://localhost:8000/api/stories/${storyId}/covers`)
         .then(res => {
-          console.log(`cover options`, res.data.options);
           setCoverImages(res.data.options);
-
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     // 더미 데이터를 사용하여 표지 이미지를 설정합니다.
     // setCoverImages([
     //   'https://via.placeholder.com/150?text=Cover+1',
@@ -35,7 +32,7 @@ const FinalPageWithCover = () => {
     //   'https://via.placeholder.com/150?text=Cover+3',
     //   'https://via.placeholder.com/150?text=Cover+4'
     // ]);
-  }, []);
+  }, [storyId]);
 
   const handleCoverSelect = (cover) => {
     dispatch(updateCoverImage(cover)); // 선택한 표지 이미지를 리덕스 상태에 저장

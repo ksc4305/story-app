@@ -1,15 +1,18 @@
+// src/store/storySlice.js
 import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  selectedOptions: {},
+  selectedImages: Array(10).fill(null), // 길이 10인 배열로 초기화
+  coverImage: '', // 표지 이미지 상태
+  creator: '', // 작가 상태
+  title: '', // 제목 상태
+  stories: [],
+};
 
 const storySlice = createSlice({
   name: 'story',
-  initialState: {
-    selectedOptions: {},
-    selectedImages: Array(10).fill(null), // 길이 10인 배열로 초기화
-    coverImage: '', // 표지 이미지 상태 추가
-    creator: '', // 작가 상태 추가
-    title: '', // 제목 상태 추가
-    stories: [],
-  },
+  initialState,
   reducers: {
     setSelectedOptions: (state, action) => {
       state.selectedOptions = action.payload;
@@ -26,10 +29,10 @@ const storySlice = createSlice({
     },
     updateSelectedImage: (state, action) => {
       const { page, image } = action.payload;
-      state.selectedImages[page - 1] = image; // 배열의 인덱스는 0부터 시작하므로 page - 1
+      state.selectedImages[page - 1] = image; // 배열의 인덱스는 0부터 시작
     },
     resetSelectedImages: (state) => {
-      state.selectedImages = Array(10).fill(null); // 배열로 초기화
+      state.selectedImages = Array(10).fill(null); // 배열 초기화
     },
     updateCoverImage: (state, action) => {
       state.coverImage = action.payload; // 표지 이미지 업데이트

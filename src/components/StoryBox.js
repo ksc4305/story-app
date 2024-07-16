@@ -18,15 +18,15 @@ function StoryBox({ story, likes, likedStories, onClick, onLikeClick }) {
         </Box>
         <Box className="icon">
           <IconButton
-            className={`heart ${likedStories[story._id] ? 'filled' : ''}`}
+            className={`heart ${likedStories[story.id] ? 'filled' : ''}`}
             onClick={(e) => {
               e.stopPropagation();
-              onLikeClick(story._id);
+              onLikeClick(story.id);
             }}
           >
-            {likedStories[story._id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            {likedStories[story.id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
-          <span>{likes[story._id] || 0}</span>
+          <span>{likes[story.id] || 0}</span>
         </Box>
       </Box>
     </Box>
