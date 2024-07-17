@@ -18,17 +18,20 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
 
+  // 선택한 옵션들 로그 표시
   useEffect(() => {
     console.log(selectedOptions);
   }, [selectedOptions]);
 
+  // 페이지 로드 시 데이터를 가져옴
   useEffect(() => {
     const loadData = async () => {
       try {
+        // GET 요청으로 스토리 컨텐츠를 가져옴
         const response = await axios.get(`http://localhost:8000/api/stories/${storyId}/contents/${currentPage}`);
         setOptions(response.data.options);
         if (currentPage === 1) {
-          setSelectedOption(response.data.options[0]);
+          setSelectedOption(response.data.options[0]);  // 첫 번째 페이지일 경우 첫 번째 옵션을 자동으로 선택
         }
       } catch (error) {
         console.error('Error fetching story content:', error);
@@ -37,43 +40,45 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
 
     loadData();
     if (fromFinalParam) {
-      setFromFinal(true);
+      setFromFinal(true);  // fromFinal 파라미터가 있을 경우 설정
     }
   }, [currentPage, storyId, fromFinalParam]);
 
+  // 콘텐츠를 생성하는 함수
   const generateContent = useCallback(async () => {
-    setOptions([]);
+    setOptions([]);  // 옵션 초기화
     const response = await fetch('http://localhost:8000/api/sse/generate_content', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prev_contents: selectedOptions,
-        current_page: currentPage
+        prev_contents: selectedOptions,  // 이전 선택된 옵션들
+        current_page: currentPage        // 현재 페이지
       }),
     });
 
-    const reader = response.body.getReader();
+    const reader = response.body.getReader();  // 스트림 데이터 읽기
     const decoder = new TextDecoder();
 
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
 
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n\n');
+      const chunk = decoder.decode(value);  // 데이터 디코딩
+      const lines = chunk.split('\n\n');    // 줄 단위로 나눔
 
       for (const line of lines) {
         if (line.startsWith('data: ')) {
           const data = line.slice(6);
           if (data === '[DONE]') {
-            return;
+            return;  // 데이터 전송 완료 시 종료
           } else if (data === '<<<OPTION_END>>>') {
-            continue;
+            continue;  // 옵션 끝 표시 무시
           } else {
             try {
-              const jsonData = JSON.parse(data);
+              const jsonData = JSON.parse(data);  // JSON 데이터 파싱
+              // 각 옵션별로 업데이트
               if ('option1' in jsonData) {
                 setOptions(prev => [...prev, jsonData.option1]);
               } else if ('option2' in jsonData) {
@@ -90,27 +95,29 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     }
   }, [selectedOptions, currentPage]);
 
+  // 옵션 선택 핸들러
   const handleOptionSelect = (option, index) => {
-    setSelectedOption(option);
-    setSelectedOptionIndex(index);
+    setSelectedOption(option);    // 선택된 옵션 설정
+    setSelectedOptionIndex(index);  // 선택된 옵션 인덱스 설정
   };
 
+  // 다음 페이지로 이동하는 함수
   const handleNext = () => {
     if (!selectedOption && currentPage !== 1) return;
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
-    setSelectedOption('');
+    setSelectedOption('');  // 다음 페이지로 넘어갈 때 선택지 초기화
 
     const data = {
       options: options,
       selected_option_index: selectedOptionIndex
     };
     axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     if (currentPage === 10) {
       navigate(`/final?story_id=${storyId}`);
@@ -119,14 +126,16 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     }
   };
 
+  // 최종 완료 핸들러
   const handleComplete = () => {
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
     navigate(`/final?story_id=${storyId}`);
   };
 
+  // 이전 페이지로 이동하는 함수
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setSelectedOption('');
+      setSelectedOption('');  // 이전 페이지로 돌아갈 때 선택지 초기화
       navigate(`/write/${currentPage - 1}?story_id=${storyId}`);
     }
   };
