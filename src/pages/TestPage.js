@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+
+import React, { useState, useCallback } from 'react';
 
 function ContentGenerator() {
     const [option1, setOption1] = useState('');
@@ -12,7 +13,7 @@ function ContentGenerator() {
         setOption2('');
         setOption3('');
 
-        const response = await fetch('http://localhost:8000/generate_content', {
+        const response = await fetch('http://localhost:8000/test/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,39 +27,31 @@ function ContentGenerator() {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
 
-        let currentOption = 1;
-        let buffer = '';
-
         while (true) {
             const { value, done } = await reader.read();
             if (done) break;
 
             const chunk = decoder.decode(value);
-            buffer += chunk;
+            const lines = chunk.split('\n\n');
 
-            while (buffer.includes('\n')) {
-                const index = buffer.indexOf('\n');
-                const line = buffer.slice(0, index);
-                buffer = buffer.slice(index + 1);
-
+            for (const line of lines) {
                 if (line.startsWith('data: ')) {
                     const data = line.slice(6);
                     if (data === '[DONE]') {
                         setIsLoading(false);
                         return;
-                    } else if (data === '<<<OPTION_END>>>') {
-                        currentOption++;
                     } else {
-                        switch (currentOption) {
-                            case 1:
-                                setOption1(prev => prev + data);
-                                break;
-                            case 2:
-                                setOption2(prev => prev + data);
-                                break;
-                            case 3:
-                                setOption3(prev => prev + data);
-                                break;
+                        try {
+                            const jsonData = JSON.parse(data);
+                            if ('option1' in jsonData) {
+                                setOption1(prev => prev + jsonData.option1);
+                            } else if ('option2' in jsonData) {
+                                setOption2(prev => prev + jsonData.option2);
+                            } else if ('option3' in jsonData) {
+                                setOption3(prev => prev + jsonData.option3);
+                            }
+                        } catch (error) {
+                            console.error('Error parsing JSON:', error);
                         }
                     }
                 }
