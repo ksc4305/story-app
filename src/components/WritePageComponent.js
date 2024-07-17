@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Typography, Paper } from '@mui/material';
-import { fetchStoryContent } from '../api';
 import { updateSelectedOption } from '../store/storySlice';
 import axios from "axios";
 
@@ -19,19 +18,20 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
 
-  // 선택한 옵션들 로그 표시
   useEffect(() => {
-    console.log(selectedOptions)
+    console.log(selectedOptions);
   }, [selectedOptions]);
 
   useEffect(() => {
     const loadData = async () => {
-      const options = await fetchStoryContent(storyId, currentPage);
-      setOptions(options);
-
-      // 현재 페이지가 1이면 하나밖에 없는 옵션 선택
-      if(currentPage === 1){
-        setSelectedOption(options[0]);
+      try {
+        const response = await axios.get(`http://localhost:8000/api/stories/${storyId}/contents/${currentPage}`);
+        setOptions(response.data.options);
+        if (currentPage === 1) {
+          setSelectedOption(response.data.options[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching story content:', error);
       }
     };
 
@@ -41,6 +41,55 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     }
   }, [currentPage, storyId, fromFinalParam]);
 
+  const generateContent = useCallback(async () => {
+    setOptions([]);
+    const response = await fetch('http://localhost:8000/api/sse/generate_content', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prev_contents: selectedOptions,
+        current_page: currentPage
+      }),
+    });
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n\n');
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') {
+            return;
+          } else if (data === '<<<OPTION_END>>>') {
+            continue;
+          } else {
+            try {
+              const jsonData = JSON.parse(data);
+              if ('option1' in jsonData) {
+                setOptions(prev => [...prev, jsonData.option1]);
+              } else if ('option2' in jsonData) {
+                setOptions(prev => [...prev, jsonData.option2]);
+              } else if ('option3' in jsonData) {
+                setOptions(prev => [...prev, jsonData.option3]);
+              }
+            } catch (error) {
+              console.error('Error parsing JSON:', error);
+            }
+          }
+        }
+      }
+    }
+  }, [selectedOptions, currentPage]);
+
   const handleOptionSelect = (option, index) => {
     setSelectedOption(option);
     setSelectedOptionIndex(index);
@@ -49,7 +98,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const handleNext = () => {
     if (!selectedOption && currentPage !== 1) return;
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
-    setSelectedOption(''); // 다음 페이지로 넘어갈 때 선택지 초기화
+    setSelectedOption('');
 
     const data = {
       options: options,
@@ -77,7 +126,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
 
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setSelectedOption(''); // 이전 페이지로 돌아갈 때 선택지 초기화
+      setSelectedOption('');
       navigate(`/write/${currentPage - 1}?story_id=${storyId}`);
     }
   };
@@ -159,6 +208,9 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
         )}
       </Paper>
       <Typography sx={{ mt: 2 }}>페이지: {currentPage === 'final' ? '완료' : `${currentPage} / 10`}</Typography>
+      <Button onClick={generateContent} disabled={options.length > 0}>
+        {options.length > 0 ? 'Loading...' : 'Generate Content'}
+      </Button>
     </Box>
   );
 };
