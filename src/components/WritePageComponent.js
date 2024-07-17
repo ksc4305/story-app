@@ -23,6 +23,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const [option2, setOption2] = useState('');
   const [option3, setOption3] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [dbReady, setDbReady] = useState(false);
 
   // 선택한 옵션들 로그 표시
   useEffect(() => {
@@ -31,22 +32,25 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
 
   // 페이지 로드 시 데이터를 가져옴
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        // GET 요청으로 스토리 컨텐츠를 가져옴
-        const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`);
-        setOption1(response.data.options[0] || '');
-        setOption2(response.data.options[1] || '');
-        setOption3(response.data.options[2] || '');        
-        if (currentPage === 1) {
-          setSelectedOption(response.data.options[0]);  // 첫 번째 페이지일 경우 첫 번째 옵션을 자동으로 선택
-        }
-      } catch (error) {
-        console.error('Error fetching story content:', error);
-      }
-    };
+    // const loadData = async () => {
+    //   try {
+    //     // GET 요청으로 스토리 컨텐츠를 가져옴
+    //     const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`);
+    //     setOption1(response.data.options[0] || '');
+    //     setOption2(response.data.options[1] || '');
+    //     setOption3(response.data.options[2] || '');
+    //     if (currentPage === 1) {
+    //       setSelectedOption(response.data.options[0]);  // 첫 번째 페이지일 경우 첫 번째 옵션을 자동으로 선택
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching story content:', error);
+    //   }
+    // };
 
-    loadData();
+    //loadData();
+
+    //동화 문장 선택지 불러옴
+    generateContent()
     if (fromFinalParam) {
       setFromFinal(true);  // fromFinal 파라미터가 있을 경우 설정
     }
@@ -59,7 +63,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     setOption2('');
     setOption3('');
 
-    const response = await fetch(`http://localhost:8001/api/sse/stories/${storyId}/pages/${currentPage}/contents`, {
+    const response = await fetch(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, {
       method: 'GET'
     });
 
@@ -110,23 +114,32 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
     setSelectedOption('');  // 다음 페이지로 넘어갈 때 선택지 초기화
 
+    // 모든 선택지 초기화
+    setOption1('');
+    setOption2('');
+    setOption3('');
+
     const data = {
-      options: options,
+      options: [option1, option2, option3],
       selected_option_index: selectedOptionIndex
     };
+
     axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
       .then(res => {
         console.log(res);
+        setDbReady(true);
+
+        if (currentPage === 10) {
+          navigate(`/final?story_id=${storyId}`);
+        } else {
+          navigate(`/write/${nextPage}?story_id=${storyId}`);
+        }
       })
       .catch(err => {
         console.log(err);
       });
 
-    if (currentPage === 10) {
-      navigate(`/final?story_id=${storyId}`);
-    } else {
-      navigate(`/write/${nextPage}?story_id=${storyId}`);
-    }
+
   };
 
   // 최종 완료 핸들러
@@ -146,41 +159,99 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   return (
 
       <Box sx={{width: 300, mx: 'auto', mt: 4, textAlign: 'center'}}>
-        <h3>Option 1:</h3>
-        <p>{option1}</p>
-        <h3>Option 2:</h3>
-        <p>{option2}</p>
-        <h3>Option 3:</h3>
-        <p>{option3}</p>
+
         <Paper elevation={3} sx={{p: 2}}>
           <Typography variant="h5" sx={{mb: 2}}>Page.{currentPage}</Typography>
           {currentPage === 1 ? (
-              <Typography variant="body1" sx={{mb: 2}}>
-                {options[0]}
-              </Typography>
+              // <Typography variant="body1" sx={{mb: 2}}>
+              //   {option1}
+              // </Typography>
+              <Paper
+                  key={0}
+                  elevation={3}
+                  sx={{
+                    mb: 2,
+                    p: 2,
+                    cursor: 'pointer',
+                    bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+                    '&:hover': {
+                      bgcolor: 'rgba(144,238,144,0.5)',
+                    },
+                    '&:active': {
+                      bgcolor: 'rgba(144,238,144,0.8)',
+                    },
+                    transition: 'background-color 0.3s',
+                  }}
+                  onClick={() => handleOptionSelect(option1, 0)}
+              >
+                {option1}
+              </Paper>
           ) : (
-              options.map((option, index) => (
-                  <Paper
-                      key={index}
-                      elevation={3}
-                      sx={{
-                        mb: 2,
-                        p: 2,
-                        cursor: 'pointer',
-                        bgcolor: selectedOption === option ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                        '&:hover': {
-                          bgcolor: 'rgba(144,238,144,0.5)',
-                        },
-                        '&:active': {
-                          bgcolor: 'rgba(144,238,144,0.8)',
-                        },
-                        transition: 'background-color 0.3s',
-                      }}
-                      onClick={() => handleOptionSelect(option, index)}
-                  >
-                    {option}
-                  </Paper>
-              ))
+              <>
+                <Paper
+                    key={0}
+                    elevation={3}
+                    sx={{
+                      mb: 2,
+                      p: 2,
+                      cursor: 'pointer',
+                      bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+                      '&:hover': {
+                        bgcolor: 'rgba(144,238,144,0.5)',
+                      },
+                      '&:active': {
+                        bgcolor: 'rgba(144,238,144,0.8)',
+                      },
+                      transition: 'background-color 0.3s',
+                    }}
+                    onClick={() => handleOptionSelect(option1, 0)}
+                >
+                  {option1}
+                </Paper>
+                <Paper
+                    key={1}
+                    elevation={3}
+                    sx={{
+                      mb: 2,
+                      p: 2,
+                      cursor: 'pointer',
+                      bgcolor: selectedOption === option2 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+                      '&:hover': {
+                        bgcolor: 'rgba(144,238,144,0.5)',
+                      },
+                      '&:active': {
+                        bgcolor: 'rgba(144,238,144,0.8)',
+                      },
+                      transition: 'background-color 0.3s',
+                    }}
+                    onClick={() => handleOptionSelect(option2, 1)}
+                >
+                  {option2}
+                </Paper>
+                <Paper
+                    key={2}
+                    elevation={3}
+                    sx={{
+                      mb: 2,
+                      p: 2,
+                      cursor: 'pointer',
+                      bgcolor: selectedOption === option3 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+                      '&:hover': {
+                        bgcolor: 'rgba(144,238,144,0.5)',
+                      },
+                      '&:active': {
+                        bgcolor: 'rgba(144,238,144,0.8)',
+                      },
+                      transition: 'background-color 0.3s',
+                    }}
+                    onClick={() => handleOptionSelect(option3, 2)}
+                >
+                  {option3}
+                </Paper>
+
+
+              </>
+
           )}
           {fromFinal ? (
               <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}>
