@@ -24,14 +24,6 @@ function ReadPage() {
       } catch (error) {
         console.error('There was an error fetching the stories!', error);
       }
-
-      // 더미 데이터를 사용
-      // const mockStories = [
-      //   { id: '1', cover_image_url: '/cover1.jpg', title: '동화 제목 1', author: '저자 1', clicks: 100 },
-      //   { id: '2', cover_image_url: '/cover2.jpg', title: '동화 제목 2', author: '저자 2', clicks: 200 },
-      //   // 추가 더미 데이터
-      // ];
-      // dispatch(setStories(mockStories));
     };
 
     fetchStories();

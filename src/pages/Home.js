@@ -6,6 +6,7 @@ import StoryBox from '../components/StoryBox';
 import './Home.css';
 import useLikes from '../hooks/useLikes';
 import { setStories } from '../store/storySlice';
+import axios from 'axios';
 
 function Home() {
   const navigate = useNavigate();
@@ -14,25 +15,16 @@ function Home() {
   const { likes, likedStories, handleLikeClick } = useLikes(stories);
 
   useEffect(() => {
-    // 실제 서버에서 데이터를 가져올 때 주석 해제
-    // axios.get('/api/stories')
-    //   .then(response => {
-    //     dispatch(setStories(response.data));
-    //   })
-    //   .catch(error => {
-    //     console.error('There was an error fetching the stories!', error);
-    //   });
+    const fetchStories = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/stories');
+        dispatch(setStories(response.data));
+      } catch (error) {
+        console.error('There was an error fetching the stories!', error);
+      }
+    };
 
-    // 더미 데이터 사용
-    const mockStories = [
-      { _id: '1', cover_image_url: '/gg1.jpg', title: '동화 제목 1', author: '사용자 1', clicks: 5 },
-      { _id: '2', cover_image_url: '/gg2.jpg', title: '동화 제목 2', author: '사용자 2', clicks: 3 },
-      { _id: '3', cover_image_url: '/gg3.jpg', title: '동화 제목 3', author: '사용자 3', clicks: 10 },
-      { _id: '4', cover_image_url: '/gg4.jpg', title: '동화 제목 4', author: '사용자 4', clicks: 1 },
-      { _id: '5', cover_image_url: '/gg5.jpg', title: '동화 제목 5', author: '사용자 5', clicks: 7 },
-      { _id: '6', cover_image_url: '/gg6.jpg', title: '동화 제목 6', author: '사용자 6', clicks: 2 },
-    ];
-    dispatch(setStories(mockStories));
+    fetchStories();
   }, [dispatch]);
 
   const handleStartClick = () => {
@@ -47,6 +39,9 @@ function Home() {
     navigate(`/read/${storyId}`);
   };
 
+  // 상위 6개의 이야기만 표시
+  const topStories = stories.slice(0, 6);
+
   return (
     <div className="home">
       <div className="hero">
@@ -58,19 +53,19 @@ function Home() {
         <h2>READ</h2>
         <p>이야기를 그림책으로 만나보세요</p>
         <Grid container spacing={2} className="story-grid">
-          {stories.map((story) => (
-            <Grid item xs={12} sm={6} md={4} key={story._id}>
+          {topStories.map((story) => (
+            <Grid item xs={12} sm={6} md={4} key={story.id}>
               <StoryBox
                 story={story}
                 likes={likes}
                 likedStories={likedStories}
-                onClick={() => handleStoryClick(story._id)}
-                onLikeClick={() => handleLikeClick(story._id)}
+                onClick={() => handleStoryClick(story.id)}
+                onLikeClick={() => handleLikeClick(story.id)}
               />
             </Grid>
           ))}
         </Grid>
-        <Button variant="outlined" color="primary" onClick={handleMoreClick}>+ More</Button>
+        <Button variant="outlined" color="primary" onClick={handleMoreClick} style={{ marginTop: '20px' }}>+ More</Button>
       </div>
     </div>
   );

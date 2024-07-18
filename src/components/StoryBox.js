@@ -9,8 +9,8 @@ function StoryBox({ story, likes, likedStories, onClick, onLikeClick }) {
   return (
     <Box className="story-box" onClick={onClick}>
       <img src={story.cover_image_url} alt={story.title} className="cover-image" />
-      <Typography variant="h6">{story.title}</Typography>
-      <Typography variant="subtitle1">{story.author}</Typography>
+      <Typography variant="h6" sx={{ fontWeight: 'bold', marginTop: 1 }}>{story.title}</Typography>
+      <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>{story.author}</Typography>
       <Box className="icon-container">
         <Box className="icon">
           <VisibilityIcon />
@@ -18,15 +18,15 @@ function StoryBox({ story, likes, likedStories, onClick, onLikeClick }) {
         </Box>
         <Box className="icon">
           <IconButton
-            className={`heart ${likedStories[story.id] ? 'filled' : ''}`}
+            className={`heart ${likedStories[story._id] ? 'filled' : ''}`}
             onClick={(e) => {
               e.stopPropagation();
-              onLikeClick(story.id);
+              onLikeClick(story._id);
             }}
           >
-            {likedStories[story.id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            {likedStories[story._id] ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           </IconButton>
-          <span>{likes[story.id] || 0}</span>
+          <span>{likes[story._id] || 0}</span>
         </Box>
       </Box>
     </Box>
