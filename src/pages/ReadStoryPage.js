@@ -78,11 +78,16 @@ function ReadStoryPage() {
       <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
         <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', padding: '16px', height: '100%' }}>
           {currentPage === 0 ? (
-            <Typography variant="h3" style={{ marginTop: '20px' }}>
-              {story.title}
-            </Typography>
+            <>
+              <Typography variant="h3" style={{ marginTop: '20px' }}>
+                {story.title}
+              </Typography>
+              {story.cover_image && (
+                <img src={story.cover_image} alt="Cover" style={{ width: '100%', height: 'auto', marginTop: '20px' }} />
+              )}
+            </>
           ) : currentPage === 11 ? (
-            <Typography variant="h5" style={{ marginTop: '20px' }}>
+            <Typography variant="h4" style={{ marginTop: '20px', textAlign: 'center' }}>
               Created by {story.author}
             </Typography>
           ) : (
