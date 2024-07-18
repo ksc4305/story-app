@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Typography, Box, IconButton } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Typography, Box, IconButton, Button } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -8,6 +8,7 @@ import axios from 'axios';
 
 function ReadStoryPage() {
   const { storyId } = useParams();
+  const navigate = useNavigate();
   const [story, setStory] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [audio, setAudio] = useState(null);
@@ -29,7 +30,7 @@ function ReadStoryPage() {
     return <div>Loading...</div>;
   }
 
-  const totalPages = story.contents.length;
+  const totalPages = 12;
 
   const handleNextPage = () => {
     if (audio) {
@@ -52,14 +53,18 @@ function ReadStoryPage() {
   };
 
   const handlePlayVoice = () => {
-    if (story.voices && story.voices[currentPage]) {
+    if (story.voices && story.voices[currentPage - 1]) {
       if (audio) {
         audio.pause();
       }
-      const newAudio = new Audio(story.voices[currentPage]);
+      const newAudio = new Audio(story.voices[currentPage - 1]);
       setAudio(newAudio);
       newAudio.play();
     }
+  };
+
+  const handleExit = () => {
+    navigate('/read');
   };
 
   return (
@@ -72,13 +77,23 @@ function ReadStoryPage() {
     }}>
       <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
         <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', padding: '16px', height: '100%' }}>
-          <Typography variant="body1" style={{ marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem', height: '100%' }}>
-            {story.contents[currentPage]}
-          </Typography>
+          {currentPage === 0 ? (
+            <Typography variant="h3" style={{ marginTop: '20px', fontWeight: 'bold' }}>
+              {story.title}
+            </Typography>
+          ) : currentPage === 11 ? (
+            <Typography variant="h5" style={{ marginTop: '20px', fontWeight: 'bold' }}>
+              Created by {story.author}
+            </Typography>
+          ) : (
+            <Typography variant="body1" style={{ marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem', height: '100%' }}>
+              {story.contents[currentPage - 1]}
+            </Typography>
+          )}
         </Box>
-        <div style={{ borderLeft: '4px solid grey', height: '100%', margin: '0 16px' }}></div>
-        {story.images[currentPage] && (
-          <img src={story.images[currentPage]} alt="Story" style={{ width: '45%', height: 'auto', marginBottom: '16px' }} />
+        <div style={{ borderLeft: '4px solid black', height: '300px', margin: '0 16px', alignSelf: 'center' }}></div>
+        {story.images[currentPage - 1] && currentPage > 0 && currentPage < 11 && (
+          <img src={story.images[currentPage - 1]} alt="Story" style={{ width: '45%', height: 'auto', marginBottom: '16px' }} />
         )}
       </Box>
       <Box style={{ position: 'absolute', top: '50%', width: '100%', display: 'flex', justifyContent: 'space-between', transform: 'translateY(-50%)' }}>
@@ -93,9 +108,24 @@ function ReadStoryPage() {
         {currentPage + 1}/{totalPages}
       </Typography>
       <Box>
-        <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
-          <PlayCircleOutlineIcon fontSize="inherit" />
-        </IconButton>
+        {currentPage > 0 && currentPage < 11 && (
+          <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
+            <PlayCircleOutlineIcon fontSize="inherit" />
+          </IconButton>
+        )}
+        {currentPage === 11 && (
+          <Button
+            variant="contained"
+            onClick={handleExit}
+            sx={{
+              bgcolor: 'lightgreen',
+              '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+              '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+            }}
+          >
+            나가기
+          </Button>
+        )}
       </Box>
     </div>
   );
