@@ -27,7 +27,7 @@ function WriteStoryPage() {
     return <div>Loading...</div>;
   }
 
-  const totalPages = story.contents.length;
+  const totalPages = 12;
 
   const handleNextPage = () => {
     stopAudio();
@@ -52,8 +52,8 @@ function WriteStoryPage() {
     if (audioRef.current) {
       audioRef.current.pause();
     }
-    if (story.voices && story.voices[currentPage]) {
-      const audio = new Audio(story.voices[currentPage]);
+    if (story.voices && story.voices[currentPage - 1]) {
+      const audio = new Audio(story.voices[currentPage - 1]);
       audioRef.current = audio;
       audio.play();
     }
@@ -68,45 +68,98 @@ function WriteStoryPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '16px', maxWidth: '80%', position: 'relative' }}>
-        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', border: '2px solid lightgreen', padding: '16px' }}>
-          <Typography variant="body1" style={{ marginBottom: '16px', fontWeight: 'bold', fontSize: '1.2rem' }}>
-            {story.contents[currentPage]}
-          </Typography>
+    <div style={{ 
+      padding: '20px', 
+      maxWidth: '1200px', 
+      margin: '0 auto', 
+      textAlign: 'center', 
+      position: 'relative'
+    }}>
+      <Box 
+        style={{ 
+          display: 'flex', 
+          flexDirection: 'row', 
+          alignItems: 'center', 
+          justifyContent: currentPage === 0 || currentPage === 11 ? 'center' : 'flex-start', 
+          maxWidth: '80%', 
+          margin: '0 auto', 
+          position: 'relative' 
+        }}
+      >
+        <Box 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            margin: '0 16px', 
+            width: currentPage === 0 || currentPage === 11 ? '100%' : '50%', 
+            padding: '16px', 
+            height: '100%' 
+          }}
+        >
+          {currentPage === 0 ? (
+            <>
+              <Typography variant="h3" style={{ marginTop: '20px', textAlign: 'center' }}>
+                {story.title}
+              </Typography>
+              {story.cover_image && (
+                <img 
+                  src={story.cover_image} 
+                  alt="Cover" 
+                  style={{ 
+                    width: 'auto', 
+                    height: '80vh', 
+                    marginTop: '20px', 
+                    objectFit: 'contain' 
+                  }} 
+                />
+              )}
+            </>
+          ) : currentPage === 11 ? (
+            <Typography variant="h4" style={{ marginTop: '20px', textAlign: 'center' }}>
+              Created by {story.author}
+            </Typography>
+          ) : (
+            <Typography variant="body1" style={{ marginTop: '20px', fontSize: '1.2rem', height: '100%' }}>
+              {story.contents[currentPage - 1]}
+            </Typography>
+          )}
         </Box>
-        <div style={{ borderLeft: '4px solid grey', height: '100%', margin: '0 16px' }}></div>
-        {story.images[currentPage] && (
-          <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '45%', height: 'auto', marginBottom: '16px', border: '2px solid lightgreen' }} />
+        {story.images[currentPage - 1] && currentPage > 0 && currentPage < 11 && (
+          <img src={story.images[currentPage - 1]} alt="Story" style={{ width: '45%', height: 'auto', marginBottom: '16px' }} />
         )}
       </Box>
-      <Box>
-        <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
-          <ArrowBackIosIcon />
+      <Box style={{ position: 'absolute', top: '50%', width: '100%', display: 'flex', justifyContent: 'space-between', transform: 'translateY(-50%)' }}>
+        <IconButton onClick={handlePreviousPage} disabled={currentPage === 0} style={{ fontSize: '4rem' }}>
+          <ArrowBackIosIcon style={{ fontSize: 'inherit' }} />
         </IconButton>
-        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
-          <ArrowForwardIosIcon />
+        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1} style={{ fontSize: '4rem' }}>
+          <ArrowForwardIosIcon style={{ fontSize: 'inherit' }} />
         </IconButton>
       </Box>
-      <Typography variant="body1" style={{ fontWeight: 'bold', marginTop: '20px', marginBottom: '20px' }}>
+      <Typography variant="h5" style={{ marginTop: '20px', marginBottom: '20px' }}>
         {currentPage + 1}/{totalPages}
       </Typography>
       <Box>
-        <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
-          <PlayCircleOutlineIcon fontSize="inherit" />
-        </IconButton>
+        {currentPage > 0 && currentPage < 11 && (
+          <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
+            <PlayCircleOutlineIcon fontSize="inherit" />
+          </IconButton>
+        )}
+        {currentPage === 11 && (
+          <Button
+            variant="contained"
+            onClick={handlePublish}
+            sx={{
+              bgcolor: 'lightgreen',
+              '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+              '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+            }}
+          >
+            게시하기
+          </Button>
+        )}
       </Box>
-      <Button
-        variant="contained"
-        onClick={handlePublish}
-        sx={{
-          bgcolor: 'lightgreen',
-          '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
-          '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
-        }}
-      >
-        게시하기
-      </Button>
     </div>
   );
 }
