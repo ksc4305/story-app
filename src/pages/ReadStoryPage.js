@@ -67,20 +67,17 @@ function ReadStoryPage() {
     <div className="read-story-page">
       <Box className="story-page">
         <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
-          <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%' }}>
+          <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', border: '2px solid lightgreen', padding: '16px' }}>
             <Typography variant="body1" className="story-content">
               {story.contents[currentPage]}
             </Typography>
           </Box>
-          <div style={{ borderLeft: '2px solid #ccc', height: '100%' }}></div>
+          <div style={{ borderLeft: '4px solid grey', height: '100%', margin: '0 16px' }}></div>
           {story.images[currentPage] && (
-            <img src={story.images[currentPage]} alt="Story" className="story-image" />
+            <img src={story.images[currentPage]} alt="Story" className="story-image" style={{ border: '2px solid lightgreen' }} />
           )}
         </Box>
       </Box>
-      <Typography variant="body1" className="page-number">
-        {currentPage + 1}/{totalPages}
-      </Typography>
       <Box className="navigation-controls">
         <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
           <ArrowBackIosIcon />
@@ -90,10 +87,13 @@ function ReadStoryPage() {
         </IconButton>
       </Box>
       <Box className="play-button">
-        <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem' }}>
+        <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
           <PlayCircleOutlineIcon fontSize="inherit" />
         </IconButton>
       </Box>
+      <Typography variant="body1" className="page-number">
+        {currentPage + 1}/{totalPages}
+      </Typography>
     </div>
   );
 }

@@ -70,19 +70,16 @@ function WriteStoryPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '16px', maxWidth: '80%', position: 'relative' }}>
-        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', border: '2px solid lightgreen', padding: '16px' }}>
           <Typography variant="body1" style={{ marginBottom: '16px', fontWeight: 'bold', fontSize: '1.2rem' }}>
             {story.contents[currentPage]}
           </Typography>
         </Box>
-        <div style={{ borderLeft: '2px solid #ccc', height: '100%' }}></div>
+        <div style={{ borderLeft: '4px solid grey', height: '100%', margin: '0 16px' }}></div>
         {story.images[currentPage] && (
-          <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '45%', height: 'auto', marginBottom: '16px' }} />
+          <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '45%', height: 'auto', marginBottom: '16px', border: '2px solid lightgreen' }} />
         )}
       </Box>
-      <Typography variant="body1" style={{ fontWeight: 'bold', marginBottom: '20px' }}>
-        {currentPage + 1}/{totalPages}
-      </Typography>
       <Box>
         <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
           <ArrowBackIosIcon />
@@ -91,8 +88,11 @@ function WriteStoryPage() {
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
+      <Typography variant="body1" style={{ fontWeight: 'bold', marginTop: '20px', marginBottom: '20px' }}>
+        {currentPage + 1}/{totalPages}
+      </Typography>
       <Box>
-        <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem' }}>
+        <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
           <PlayCircleOutlineIcon fontSize="inherit" />
         </IconButton>
       </Box>
