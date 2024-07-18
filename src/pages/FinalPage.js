@@ -13,18 +13,6 @@ const FinalPage = () => {
   const [sentences, setSentences] = useState([]);
 
   useEffect(() => {
-    // 서버에서 선택한 항목들을 가져오는 코드 (주석 처리)
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.get(`http://127.0.0.1:8000/api/stories/${storyId}/contents`);
-    //     setSentences(response.data.sentences);
-    //   } catch (error) {
-    //     console.error('Error fetching story content:', error);
-    //   }
-    // };
-
-    // fetchData();
-
     // 예시 데이터를 사용하여 10가지 내용을 출력
     const allSentences = [...Object.values(selectedOptions)];
     setSentences(allSentences);
@@ -35,10 +23,9 @@ const FinalPage = () => {
   };
 
   const handleCreate = async () => {
-    // 서버에 선택한 항목들을 최종 저장하는 코드 (주석 처리)
-      const data = {
-          contents: sentences
-      }
+    const data = {
+      contents: sentences
+    }
     try {
       await axios.post(`http://127.0.0.1:8000/api/sse/stories/${storyId}/contents`, data);
       alert('이야기가 성공적으로 저장되었습니다.');
@@ -46,7 +33,6 @@ const FinalPage = () => {
     } catch (error) {
       console.error('Error finalizing story:', error);
     }
-
   };
 
   const handleClick = (index) => {
@@ -54,7 +40,7 @@ const FinalPage = () => {
   };
 
   return (
-    <Box sx={{ width: 300, mx: 'auto', mt: 4, textAlign: 'center' }}>
+    <Box sx={{ width: '80%', maxWidth: 800, mx: 'auto', mt: 4, textAlign: 'center' }}>
       <Box sx={{ mt: 2 }}>
         {sentences.map((sentence, index) => (
           <Paper
@@ -87,7 +73,7 @@ const FinalPage = () => {
               bgcolor: 'rgba(144,238,144,0.5)',
             },
             '&:active': {
-              bgcolor: 'rgba(144,238,144,0.8)', // 클릭 시 효과
+              bgcolor: 'rgba(144,238,144,0.8)',
             },
           }}
           onClick={handleCreate}
