@@ -13,7 +13,6 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const fromFinalParam = queryParams.get('fromFinal');
   const dispatch = useDispatch();
   const selectedOptions = useSelector((state) => state.story.selectedOptions);
-  const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
@@ -23,20 +22,13 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const [option3, setOption3] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 선택한 옵션들 로그 표시
-  useEffect(() => {
-    console.log(selectedOptions);
-  }, [selectedOptions]);
-
-  // 페이지 로드 시 데이터를 가져옴
   useEffect(() => {
     generateContent();
     if (fromFinalParam) {
-      setFromFinal(true);  // fromFinal 파라미터가 있을 경우 설정
+      setFromFinal(true);
     }
-  }, [currentPage, storyId, fromFinalParam]);
+  }, [currentPage, storyId, fromFinalParam, generateContent]);
 
-  // 콘텐츠를 생성하는 함수 ******************************여기가 페이지 렌더링 될 때 실행되야 하는 함수***********************************
   const generateContent = useCallback(async () => {
     setIsLoading(true);
     setOption1('');
@@ -82,19 +74,16 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     }
   }, [currentPage, storyId]);
 
-  // 옵션 선택 핸들러
   const handleOptionSelect = (option, index) => {
-    setSelectedOption(option);    // 선택된 옵션 설정
-    setSelectedOptionIndex(index);  // 선택된 옵션 인덱스 설정
+    setSelectedOption(option);
+    setSelectedOptionIndex(index);
   };
 
-  // 다음 페이지로 이동하는 함수
   const handleNext = () => {
     if (!selectedOption && currentPage !== 1) return;
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
-    setSelectedOption('');  // 다음 페이지로 넘어갈 때 선택지 초기화
+    setSelectedOption('');
 
-    // 모든 선택지 초기화
     setOption1('');
     setOption2('');
     setOption3('');
@@ -119,16 +108,14 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
       });
   };
 
-  // 최종 완료 핸들러
   const handleComplete = () => {
     dispatch(updateSelectedOption({ page: currentPage, option: selectedOption }));
     navigate(`/final?story_id=${storyId}`);
   };
 
-  // 이전 페이지로 이동하는 함수
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setSelectedOption('');  // 이전 페이지로 돌아갈 때 선택지 초기화
+      setSelectedOption('');
       navigate(`/write/${currentPage - 1}?story_id=${storyId}`);
     }
   };
@@ -137,66 +124,91 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     <Box sx={{ width: '80%', maxWidth: 800, mx: 'auto', mt: 4, textAlign: 'center' }}>
       <Paper elevation={3} sx={{ p: 2 }}>
         <Typography variant="h5" sx={{ mb: 2 }}>Page.{currentPage}</Typography>
-        <Paper
-          key={0}
-          elevation={3}
-          sx={{
-            mb: 2,
-            p: 2,
-            cursor: 'pointer',
-            bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-            '&:hover': {
-              bgcolor: 'rgba(144,238,144,0.5)',
-            },
-            '&:active': {
-              bgcolor: 'rgba(144,238,144,0.8)',
-            },
-            transition: 'background-color 0.3s',
-          }}
-          onClick={() => handleOptionSelect(option1, 0)}
-        >
-          {option1}
-        </Paper>
-        <Paper
-          key={1}
-          elevation={3}
-          sx={{
-            mb: 2,
-            p: 2,
-            cursor: 'pointer',
-            bgcolor: selectedOption === option2 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-            '&:hover': {
-              bgcolor: 'rgba(144,238,144,0.5)',
-            },
-            '&:active': {
-              bgcolor: 'rgba(144,238,144,0.8)',
-            },
-            transition: 'background-color 0.3s',
-          }}
-          onClick={() => handleOptionSelect(option2, 1)}
-        >
-          {option2}
-        </Paper>
-        <Paper
-          key={2}
-          elevation={3}
-          sx={{
-            mb: 2,
-            p: 2,
-            cursor: 'pointer',
-            bgcolor: selectedOption === option3 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-            '&:hover': {
-              bgcolor: 'rgba(144,238,144,0.5)',
-            },
-            '&:active': {
-              bgcolor: 'rgba(144,238,144,0.8)',
-            },
-            transition: 'background-color 0.3s',
-          }}
-          onClick={() => handleOptionSelect(option3, 2)}
-        >
-          {option3}
-        </Paper>
+        {currentPage === 1 ? (
+          <Paper
+            key={0}
+            elevation={3}
+            sx={{
+              mb: 2,
+              p: 2,
+              cursor: 'pointer',
+              bgcolor: 'background.paper',
+              '&:hover': {
+                bgcolor: 'rgba(144,238,144,0.5)',
+              },
+              '&:active': {
+                bgcolor: 'rgba(144,238,144,0.8)',
+              },
+              transition: 'background-color 0.3s',
+            }}
+            onClick={() => handleOptionSelect(option1, 0)}
+          >
+            {option1}
+          </Paper>
+        ) : (
+          <>
+            <Paper
+              key={0}
+              elevation={3}
+              sx={{
+                mb: 2,
+                p: 2,
+                cursor: 'pointer',
+                bgcolor: 'background.paper',
+                '&:hover': {
+                  bgcolor: 'rgba(144,238,144,0.5)',
+                },
+                '&:active': {
+                  bgcolor: 'rgba(144,238,144,0.8)',
+                },
+                transition: 'background-color 0.3s',
+              }}
+              onClick={() => handleOptionSelect(option1, 0)}
+            >
+              {option1}
+            </Paper>
+            <Paper
+              key={1}
+              elevation={3}
+              sx={{
+                mb: 2,
+                p: 2,
+                cursor: 'pointer',
+                bgcolor: 'background.paper',
+                '&:hover': {
+                  bgcolor: 'rgba(144,238,144,0.5)',
+                },
+                '&:active': {
+                  bgcolor: 'rgba(144,238,144,0.8)',
+                },
+                transition: 'background-color 0.3s',
+              }}
+              onClick={() => handleOptionSelect(option2, 1)}
+            >
+              {option2}
+            </Paper>
+            <Paper
+              key={2}
+              elevation={3}
+              sx={{
+                mb: 2,
+                p: 2,
+                cursor: 'pointer',
+                bgcolor: 'background.paper',
+                '&:hover': {
+                  bgcolor: 'rgba(144,238,144,0.5)',
+                },
+                '&:active': {
+                  bgcolor: 'rgba(144,238,144,0.8)',
+                },
+                transition: 'background-color 0.3s',
+              }}
+              onClick={() => handleOptionSelect(option3, 2)}
+            >
+              {option3}
+            </Paper>
+          </>
+        )}
         {fromFinal ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <Button
