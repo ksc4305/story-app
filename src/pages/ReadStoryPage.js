@@ -96,11 +96,11 @@ function ReadStoryPage() {
         )}
       </Box>
       <Box style={{ position: 'absolute', top: '50%', width: '100%', display: 'flex', justifyContent: 'space-between', transform: 'translateY(-50%)' }}>
-        <IconButton onClick={handlePreviousPage} disabled={currentPage === 0} style={{ fontSize: '2rem' }}>
-          <ArrowBackIosIcon />
+        <IconButton onClick={handlePreviousPage} disabled={currentPage === 0} style={{ fontSize: '4rem' }}>
+          <ArrowBackIosIcon style={{ fontSize: 'inherit' }} />
         </IconButton>
-        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1} style={{ fontSize: '2rem' }}>
-          <ArrowForwardIosIcon />
+        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1} style={{ fontSize: '4rem' }}>
+          <ArrowForwardIosIcon style={{ fontSize: 'inherit' }} />
         </IconButton>
       </Box>
       <Typography variant="h5" style={{ marginTop: '20px', marginBottom: '20px' }}>
