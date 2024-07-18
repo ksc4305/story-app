@@ -13,7 +13,7 @@ const Write = () => {
   const dispatch = useDispatch();
   const [inputText, setInputText] = useState('');
   const [rows, setRows] = useState(1);
-  const [helperEnabled, setHelperEnabled] = useState(false);
+  const [helperEnabled, setHelperEnabled] = useState(true);
   const [formData, setFormData] = useState({
     who: '',
     when: '',
