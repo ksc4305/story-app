@@ -18,12 +18,10 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(currentPage === 1 ? 0 : null);
   const [fromFinal, setFromFinal] = useState(false);
 
-
   const [option1, setOption1] = useState('');
   const [option2, setOption2] = useState('');
   const [option3, setOption3] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [dbReady, setDbReady] = useState(false);
 
   // 선택한 옵션들 로그 표시
   useEffect(() => {
@@ -32,25 +30,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
 
   // 페이지 로드 시 데이터를 가져옴
   useEffect(() => {
-    // const loadData = async () => {
-    //   try {
-    //     // GET 요청으로 스토리 컨텐츠를 가져옴
-    //     const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`);
-    //     setOption1(response.data.options[0] || '');
-    //     setOption2(response.data.options[1] || '');
-    //     setOption3(response.data.options[2] || '');
-    //     if (currentPage === 1) {
-    //       setSelectedOption(response.data.options[0]);  // 첫 번째 페이지일 경우 첫 번째 옵션을 자동으로 선택
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching story content:', error);
-    //   }
-    // };
-
-    //loadData();
-
-    //동화 문장 선택지 불러옴
-    generateContent()
+    generateContent();
     if (fromFinalParam) {
       setFromFinal(true);  // fromFinal 파라미터가 있을 경우 설정
     }
@@ -127,7 +107,6 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     axios.post(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/contents`, data)
       .then(res => {
         console.log(res);
-        setDbReady(true);
 
         if (currentPage === 10) {
           navigate(`/final?story_id=${storyId}`);
@@ -138,8 +117,6 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
       .catch(err => {
         console.log(err);
       });
-
-
   };
 
   // 최종 완료 핸들러
@@ -157,151 +134,118 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   };
 
   return (
-
-      <Box sx={{width: 300, mx: 'auto', mt: 4, textAlign: 'center'}}>
-
-        <Paper elevation={3} sx={{p: 2}}>
-          <Typography variant="h5" sx={{mb: 2}}>Page.{currentPage}</Typography>
-          {currentPage === 1 ? (
-              // <Typography variant="body1" sx={{mb: 2}}>
-              //   {option1}
-              // </Typography>
-              <Paper
-                  key={0}
-                  elevation={3}
-                  sx={{
-                    mb: 2,
-                    p: 2,
-                    cursor: 'pointer',
-                    bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                    '&:hover': {
-                      bgcolor: 'rgba(144,238,144,0.5)',
-                    },
-                    '&:active': {
-                      bgcolor: 'rgba(144,238,144,0.8)',
-                    },
-                    transition: 'background-color 0.3s',
-                  }}
-                  onClick={() => handleOptionSelect(option1, 0)}
-              >
-                {option1}
-              </Paper>
-          ) : (
-              <>
-                <Paper
-                    key={0}
-                    elevation={3}
-                    sx={{
-                      mb: 2,
-                      p: 2,
-                      cursor: 'pointer',
-                      bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                      '&:hover': {
-                        bgcolor: 'rgba(144,238,144,0.5)',
-                      },
-                      '&:active': {
-                        bgcolor: 'rgba(144,238,144,0.8)',
-                      },
-                      transition: 'background-color 0.3s',
-                    }}
-                    onClick={() => handleOptionSelect(option1, 0)}
-                >
-                  {option1}
-                </Paper>
-                <Paper
-                    key={1}
-                    elevation={3}
-                    sx={{
-                      mb: 2,
-                      p: 2,
-                      cursor: 'pointer',
-                      bgcolor: selectedOption === option2 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                      '&:hover': {
-                        bgcolor: 'rgba(144,238,144,0.5)',
-                      },
-                      '&:active': {
-                        bgcolor: 'rgba(144,238,144,0.8)',
-                      },
-                      transition: 'background-color 0.3s',
-                    }}
-                    onClick={() => handleOptionSelect(option2, 1)}
-                >
-                  {option2}
-                </Paper>
-                <Paper
-                    key={2}
-                    elevation={3}
-                    sx={{
-                      mb: 2,
-                      p: 2,
-                      cursor: 'pointer',
-                      bgcolor: selectedOption === option3 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                      '&:hover': {
-                        bgcolor: 'rgba(144,238,144,0.5)',
-                      },
-                      '&:active': {
-                        bgcolor: 'rgba(144,238,144,0.8)',
-                      },
-                      transition: 'background-color 0.3s',
-                    }}
-                    onClick={() => handleOptionSelect(option3, 2)}
-                >
-                  {option3}
-                </Paper>
-
-
-              </>
-
-          )}
-          {fromFinal ? (
-              <Box sx={{display: 'flex', justifyContent: 'center', mt: 2}}>
-                <Button
-                    variant="contained"
-                    onClick={handleComplete}
-                    sx={{
-                      bgcolor: 'lightgreen',
-                      '&:hover': {bgcolor: 'rgba(144,238,144,0.5)'},
-                      '&:active': {bgcolor: 'rgba(144,238,144,0.8)'}
-                    }}
-                >
-                  완료
-                </Button>
-              </Box>
-          ) : (
-              <Box sx={{display: 'flex', justifyContent: currentPage === 1 ? 'center' : 'space-between', mt: 2}}>
-                {currentPage !== 1 && (
-                    <Button
-                        variant="contained"
-                        onClick={handlePrevious}
-                        sx={{
-                          bgcolor: 'lightgreen',
-                          '&:hover': {bgcolor: 'rgba(144,238,144,0.5)'},
-                          '&:active': {bgcolor: 'rgba(144,238,144,0.8)'}
-                        }}
-                    >
-                      이전
-                    </Button>
-                )}
-                <Button
-                    variant="contained"
-                    onClick={handleNext}
-                    disabled={!selectedOption && currentPage !== 1}
-                    sx={{
-                      bgcolor: 'lightgreen',
-                      '&:hover': {bgcolor: 'rgba(144,238,144,0.5)'},
-                      '&:active': {bgcolor: 'rgba(144,238,144,0.8)'}
-                    }}
-                >
-                  {currentPage === 10 ? '완료' : '다음'}
-                </Button>
-              </Box>
-          )}
+    <Box sx={{ width: '80%', maxWidth: 800, mx: 'auto', mt: 4, textAlign: 'center' }}>
+      <Paper elevation={3} sx={{ p: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>Page.{currentPage}</Typography>
+        <Paper
+          key={0}
+          elevation={3}
+          sx={{
+            mb: 2,
+            p: 2,
+            cursor: 'pointer',
+            bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+            '&:hover': {
+              bgcolor: 'rgba(144,238,144,0.5)',
+            },
+            '&:active': {
+              bgcolor: 'rgba(144,238,144,0.8)',
+            },
+            transition: 'background-color 0.3s',
+          }}
+          onClick={() => handleOptionSelect(option1, 0)}
+        >
+          {option1}
         </Paper>
-        <Typography sx={{mt: 2}}>페이지: {currentPage === 'final' ? '완료' : `${currentPage} / 10`}</Typography>
-        <Button onClick={generateContent} disabled={options.length > 0}>
-          {options.length > 0 ? 'Loading...' : 'Generate Content'}
-        </Button>
-      </Box>
+        <Paper
+          key={1}
+          elevation={3}
+          sx={{
+            mb: 2,
+            p: 2,
+            cursor: 'pointer',
+            bgcolor: selectedOption === option2 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+            '&:hover': {
+              bgcolor: 'rgba(144,238,144,0.5)',
+            },
+            '&:active': {
+              bgcolor: 'rgba(144,238,144,0.8)',
+            },
+            transition: 'background-color 0.3s',
+          }}
+          onClick={() => handleOptionSelect(option2, 1)}
+        >
+          {option2}
+        </Paper>
+        <Paper
+          key={2}
+          elevation={3}
+          sx={{
+            mb: 2,
+            p: 2,
+            cursor: 'pointer',
+            bgcolor: selectedOption === option3 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+            '&:hover': {
+              bgcolor: 'rgba(144,238,144,0.5)',
+            },
+            '&:active': {
+              bgcolor: 'rgba(144,238,144,0.8)',
+            },
+            transition: 'background-color 0.3s',
+          }}
+          onClick={() => handleOptionSelect(option3, 2)}
+        >
+          {option3}
+        </Paper>
+        {fromFinal ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Button
+              variant="contained"
+              onClick={handleComplete}
+              sx={{
+                bgcolor: 'lightgreen',
+                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+              }}
+            >
+              완료
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: currentPage === 1 ? 'center' : 'space-between', mt: 2 }}>
+            {currentPage !== 1 && (
+              <Button
+                variant="contained"
+                onClick={handlePrevious}
+                sx={{
+                  bgcolor: 'lightgreen',
+                  '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                  '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+                }}
+              >
+                이전
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={!selectedOption && currentPage !== 1}
+              sx={{
+                bgcolor: 'lightgreen',
+                '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
+                '&:active': { bgcolor: 'rgba(144,238,144,0.8)' }
+              }}
+            >
+              {currentPage === 10 ? '완료' : '다음'}
+            </Button>
+          </Box>
+        )}
+      </Paper>
+      <Typography sx={{ mt: 2 }}>페이지: {currentPage === 'final' ? '완료' : `${currentPage} / 10`}</Typography>
+      <Button onClick={generateContent} disabled={isLoading}>
+        {isLoading ? 'Loading...' : 'Generate Content'}
+      </Button>
+    </Box>
   );
 };
 

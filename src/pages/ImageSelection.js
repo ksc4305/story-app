@@ -25,7 +25,7 @@ const ImageSelection = () => {
       try {
         const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/images`);
         setStory(response.data.content);
-        setImages(response.data.images);
+        setImages(response.data.images.slice(0, 2)); // 이미지 배열을 2개로 제한
       } catch (error) {
         console.error('Error fetching content:', error);
       }
@@ -34,9 +34,7 @@ const ImageSelection = () => {
       // setStory(`이것은 ${currentPage}번째 페이지의 이야기입니다.`);
       // setImages([
       //   'https://via.placeholder.com/150?text=Image+1',
-      //   'https://via.placeholder.com/150?text=Image+2',
-      //   'https://via.placeholder.com/150?text=Image+3',
-      //   'https://via.placeholder.com/150?text=Image+4'
+      //   'https://via.placeholder.com/150?text=Image+2'
       // ]);
     };
 
@@ -72,7 +70,6 @@ const ImageSelection = () => {
       }
     }
   };
-  
 
   const handlePrevious = () => {
     if (currentPage > 1) {
@@ -112,7 +109,7 @@ const ImageSelection = () => {
           </Button>
         </>
       ) : (
-        <Box sx={{ width: '100%', maxWidth: 500, mt: 4, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <Box sx={{ width: '80%', maxWidth: 800, mt: 4, flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <Paper elevation={3} sx={{ p: 2, mb: 4 }}>
             <Typography variant="h6">{story}</Typography>
           </Paper>
