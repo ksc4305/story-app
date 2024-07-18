@@ -119,19 +119,21 @@ function WriteStoryPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '16px' }}>
+      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '16px', maxWidth: '80%' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%' }}>
+          <Typography variant="body1" style={{ marginBottom: '16px', fontWeight: 'bold', fontSize: '1.2rem' }}>
+            {story.contents[currentPage]}
+          </Typography>
+          <Typography variant="body1" style={{ fontWeight: 'bold' }}>{currentPage + 1}/{totalPages}</Typography>
+        </Box>
+        {story.images[currentPage] && (
+          <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '50%', height: 'auto', marginBottom: '16px' }} />
+        )}
+      </Box>
+      <Box>
         <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
           <ArrowBackIosIcon />
         </IconButton>
-        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 16px' }}>
-          {story.images[currentPage] && (
-            <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '100%', height: 'auto', marginBottom: '16px' }} />
-          )}
-          <Typography variant="body1" style={{ marginBottom: '16px' }}>
-            {story.contents[currentPage]}
-          </Typography>
-          <Typography variant="body1">{currentPage + 1}/{totalPages}</Typography>
-        </Box>
         <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
           <ArrowForwardIosIcon />
         </IconButton>

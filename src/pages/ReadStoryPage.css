@@ -18,6 +18,8 @@
 
 .story-content {
   margin-top: 20px;
+  font-weight: bold;
+  font-size: 1.2rem; /* 글씨체 크기 조정 */
 }
 
 .page-number {
@@ -35,7 +37,7 @@
 }
 
 .navigation-controls .MuiIconButton-root {
-  font-size: 2rem; /* Increase the size of the arrow buttons */
+  font-size: 2rem; /* 화살표 버튼 크기 증가 */
 }
 
 .play-button {
@@ -43,5 +45,5 @@
 }
 
 .play-button .MuiIconButton-root {
-  font-size: 5rem; /* Increase the size of the play button */
+  font-size: 5rem; /* 재생 버튼 크기 증가 */
 }

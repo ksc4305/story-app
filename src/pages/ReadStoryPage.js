@@ -11,6 +11,7 @@ function ReadStoryPage() {
   const { storyId } = useParams();
   const [story, setStory] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [audio, setAudio] = useState(null);  // 현재 재생 중인 오디오 객체를 저장
 
   useEffect(() => {
     const fetchStory = async () => {
@@ -38,6 +39,12 @@ function ReadStoryPage() {
       //     '/image3.jpg',
       //     // 추가 더미 이미지
       //   ],
+      //   voices: [
+      //     'voice1.mp3',
+      //     'voice2.mp3',
+      //     'voice3.mp3',
+      //     // 추가 더미 음성 파일
+      //   ],
       // };
       // setStory(mockStory);
     };
@@ -52,27 +59,52 @@ function ReadStoryPage() {
   const totalPages = story.contents.length;
 
   const handleNextPage = () => {
+    if (audio) {
+      audio.pause();  // 재생 중인 음성이 있으면 중지
+      setAudio(null);  // 오디오 객체 초기화
+    }
     if (currentPage < totalPages - 1) {
       setCurrentPage(currentPage + 1);
     }
   };
 
   const handlePreviousPage = () => {
+    if (audio) {
+      audio.pause();  // 재생 중인 음성이 있으면 중지
+      setAudio(null);  // 오디오 객체 초기화
+    }
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handlePlayVoice = () => {
+    if (story.voices && story.voices[currentPage]) {
+      if (audio) {
+        audio.pause();  // 재생 중인 음성이 있으면 중지
+      }
+      const newAudio = new Audio(story.voices[currentPage]);
+      setAudio(newAudio);  // 새로운 오디오 객체 저장
+      newAudio.play();  // 새로운 음성 재생
     }
   };
 
   return (
     <div className="read-story-page">
       <Box className="story-page">
-        {story.images[currentPage] && (
-          <img src={story.images[currentPage]} alt="Story" className="story-image" />
-        )}
-        <Typography variant="body1" className="story-content">
-          {story.contents[currentPage]}
-        </Typography>
-        <Typography variant="body1" className="page-number">{currentPage + 1}/{totalPages}</Typography>
+        <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto' }}>
+          <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%' }}>
+            <Typography variant="body1" className="story-content">
+              {story.contents[currentPage]}
+            </Typography>
+            <Typography variant="body1" className="page-number">
+              {currentPage + 1}/{totalPages}
+            </Typography>
+          </Box>
+          {story.images[currentPage] && (
+            <img src={story.images[currentPage]} alt="Story" className="story-image" />
+          )}
+        </Box>
       </Box>
       <Box className="navigation-controls">
         <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
@@ -83,7 +115,7 @@ function ReadStoryPage() {
         </IconButton>
       </Box>
       <Box className="play-button">
-        <IconButton>
+        <IconButton onClick={handlePlayVoice}>
           <PlayCircleOutlineIcon />
         </IconButton>
       </Box>
