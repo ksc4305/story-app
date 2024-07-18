@@ -14,7 +14,6 @@ function WriteStoryPage() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    // 실제 서버에서 데이터를 가져오는 코드
     axios.get(`http://localhost:8000/api/stories/${storyId}`)
       .then(response => {
         setStory(response.data);
@@ -22,55 +21,6 @@ function WriteStoryPage() {
       .catch(error => {
         console.error('There was an error fetching the story!', error);
       });
-
-    // 더미 데이터를 사용하여 이야기와 이미지를 설정합니다.
-    // const mockStory = {
-    //   id: storyId,
-    //   title: '동화 제목',
-    //   author: '사용자 1',
-    //   cover_image: '/cover.jpg',
-    //   contents: [
-    //     '',
-    //     '동화 내용 1',
-    //     '동화 내용 2',
-    //     '동화 내용 3',
-    //     '동화 내용 4',
-    //     '동화 내용 5',
-    //     '동화 내용 6',
-    //     '동화 내용 7',
-    //     '동화 내용 8',
-    //     '동화 내용 9',
-    //     '동화 내용 10',
-    //     'Created by 사용자 1'
-    //   ],
-    //   images: [
-    //     '/gg1.jpg',
-    //     '/gg2.jpg',
-    //     '/gg3.jpg',
-    //     '/gg4.jpg',
-    //     '/gg5.jpg',
-    //     '/gg6.jpg',
-    //     '/gg7.jpg',
-    //     '/gg8.jpg',
-    //     '/gg9.jpg',
-    //     '/gg10.jpg',
-    //     '/gg11.jpg'
-    //   ],
-    //   voices: [
-    //     'voice1.mp3',
-    //     'voice2.mp3',
-    //     'voice3.mp3',
-    //     'voice4.mp3',
-    //     'voice5.mp3',
-    //     'voice6.mp3',
-    //     'voice7.mp3',
-    //     'voice8.mp3',
-    //     'voice9.mp3',
-    //     'voice10.mp3'
-    //   ],
-    //   created_date: '2023-07-14'
-    // };
-    // setStory(mockStory);
   }, [storyId]);
 
   if (!story) {
@@ -119,17 +69,20 @@ function WriteStoryPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '16px', maxWidth: '80%' }}>
+      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '16px', maxWidth: '80%', position: 'relative' }}>
         <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%' }}>
           <Typography variant="body1" style={{ marginBottom: '16px', fontWeight: 'bold', fontSize: '1.2rem' }}>
             {story.contents[currentPage]}
           </Typography>
-          <Typography variant="body1" style={{ fontWeight: 'bold' }}>{currentPage + 1}/{totalPages}</Typography>
         </Box>
+        <div style={{ borderLeft: '2px solid #ccc', height: '100%' }}></div>
         {story.images[currentPage] && (
-          <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '50%', height: 'auto', marginBottom: '16px' }} />
+          <img src={story.images[currentPage]} alt="Story" style={{ maxWidth: '45%', height: 'auto', marginBottom: '16px' }} />
         )}
       </Box>
+      <Typography variant="body1" style={{ fontWeight: 'bold', marginBottom: '20px' }}>
+        {currentPage + 1}/{totalPages}
+      </Typography>
       <Box>
         <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
           <ArrowBackIosIcon />
@@ -139,8 +92,8 @@ function WriteStoryPage() {
         </IconButton>
       </Box>
       <Box>
-        <IconButton onClick={handlePlayVoice}>
-          <PlayCircleOutlineIcon />
+        <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem' }}>
+          <PlayCircleOutlineIcon fontSize="inherit" />
         </IconButton>
       </Box>
       <Button
