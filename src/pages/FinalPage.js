@@ -57,6 +57,7 @@ const FinalPage = () => {
                 bgcolor: 'rgba(144,238,144,0.8)',
               },
               transition: 'background-color 0.3s',
+              width: '100%'
             }}
             onClick={() => handleClick(index)}
           >

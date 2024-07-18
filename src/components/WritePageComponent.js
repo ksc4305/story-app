@@ -124,49 +124,28 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
     <Box sx={{ width: '80%', maxWidth: 800, mx: 'auto', mt: 4, textAlign: 'center' }}>
       <Paper elevation={3} sx={{ p: 2 }}>
         <Typography variant="h5" sx={{ mb: 2 }}>Page.{currentPage}</Typography>
-        {currentPage === 1 ? (
-          <Paper
-            key={0}
-            elevation={3}
-            sx={{
-              mb: 2,
-              p: 2,
-              cursor: 'pointer',
-              bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-              '&:hover': {
-                bgcolor: 'rgba(144,238,144,0.5)',
-              },
-              '&:active': {
-                bgcolor: 'rgba(144,238,144,0.8)',
-              },
-              transition: 'background-color 0.3s',
-            }}
-            onClick={() => handleOptionSelect(option1, 0)}
-          >
-            {option1}
-          </Paper>
-        ) : (
+        <Paper
+          key={0}
+          elevation={3}
+          sx={{
+            mb: 2,
+            p: 2,
+            cursor: 'pointer',
+            bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
+            '&:hover': {
+              bgcolor: 'rgba(144,238,144,0.5)',
+            },
+            '&:active': {
+              bgcolor: 'rgba(144,238,144,0.8)',
+            },
+            transition: 'background-color 0.3s',
+          }}
+          onClick={() => handleOptionSelect(option1, 0)}
+        >
+          {option1}
+        </Paper>
+        {currentPage !== 1 && (
           <>
-            <Paper
-              key={0}
-              elevation={3}
-              sx={{
-                mb: 2,
-                p: 2,
-                cursor: 'pointer',
-                bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
-                '&:hover': {
-                  bgcolor: 'rgba(144,238,144,0.5)',
-                },
-                '&:active': {
-                  bgcolor: 'rgba(144,238,144,0.8)',
-                },
-                transition: 'background-color 0.3s',
-              }}
-              onClick={() => handleOptionSelect(option1, 0)}
-            >
-              {option1}
-            </Paper>
             <Paper
               key={1}
               elevation={3}
