@@ -1,4 +1,3 @@
-// src/App.js
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -18,6 +17,7 @@ const ReadPage = lazy(() => import('./pages/ReadPage'));
 const ReadStoryPage = lazy(() => import('./pages/ReadStoryPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const TestPage = lazy(() => import('./pages/TestPage'));
+const Introduction = lazy(() => import('./pages/Introduction'));
 
 function App() {
   return (
@@ -37,6 +37,7 @@ function App() {
           <Route path="/read/:storyId" element={<ReadStoryPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/test" element={<TestPage />} />
+          <Route path="/introduction" element={<Introduction />} />
         </Routes>
       </Suspense>
       <Footer />
