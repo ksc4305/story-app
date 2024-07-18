@@ -76,10 +76,10 @@ function ReadStoryPage() {
       position: 'relative'
     }}>
       <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
-        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', padding: '16px', height: '100%' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 16px', width: '50%', padding: '16px', height: '100%' }}>
           {currentPage === 0 ? (
             <>
-              <Typography variant="h3" style={{ marginTop: '20px' }}>
+              <Typography variant="h3" style={{ marginTop: '20px', textAlign: 'center' }}>
                 {story.title}
               </Typography>
               {story.cover_image && (
