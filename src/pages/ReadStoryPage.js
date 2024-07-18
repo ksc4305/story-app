@@ -68,14 +68,11 @@ function ReadStoryPage() {
       maxWidth: '1200px', 
       margin: '0 auto', 
       textAlign: 'center', 
-      position: 'relative',
-      backgroundImage: 'url(/path/to/your/book-background-image.jpg)', 
-      backgroundSize: 'cover', 
-      backgroundPosition: 'center'
+      position: 'relative'
     }}>
       <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
-        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', padding: '16px' }}>
-          <Typography variant="body1" style={{ marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', padding: '16px', height: '100%' }}>
+          <Typography variant="body1" style={{ marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem', height: '100%' }}>
             {story.contents[currentPage]}
           </Typography>
         </Box>
@@ -92,14 +89,14 @@ function ReadStoryPage() {
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
+      <Typography variant="h5" style={{ fontWeight: 'bold', marginTop: '20px', marginBottom: '20px' }}>
+        {currentPage + 1}/{totalPages}
+      </Typography>
       <Box>
         <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
           <PlayCircleOutlineIcon fontSize="inherit" />
         </IconButton>
       </Box>
-      <Typography variant="body1" style={{ fontWeight: 'bold', position: 'absolute', top: 'calc(50% + 40px)', left: '50%', transform: 'translateX(-50%)' }}>
-        {currentPage + 1}/{totalPages}
-      </Typography>
     </div>
   );
 }
