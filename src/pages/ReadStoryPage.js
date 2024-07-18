@@ -103,7 +103,16 @@ function ReadStoryPage() {
                 {story.title}
               </Typography>
               {story.cover_image && (
-                <img src={story.cover_image} alt="Cover" style={{ width: '100%', height: 'auto', marginTop: '20px' }} />
+                <img 
+                  src={story.cover_image} 
+                  alt="Cover" 
+                  style={{ 
+                    width: 'auto', 
+                    height: '80vh', 
+                    marginTop: '20px', 
+                    objectFit: 'contain' 
+                  }} 
+                />
               )}
             </>
           ) : currentPage === 11 ? (
