@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Box, IconButton, Button } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -11,6 +11,7 @@ function WriteStoryPage() {
   const navigate = useNavigate();
   const [story, setStory] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     // 실제 서버에서 데이터를 가져오는 코드
@@ -79,12 +80,14 @@ function WriteStoryPage() {
   const totalPages = story.contents.length;
 
   const handleNextPage = () => {
+    stopAudio();
     if (currentPage < totalPages - 1) {
       setCurrentPage(currentPage + 1);
     }
   };
 
   const handlePreviousPage = () => {
+    stopAudio();
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
@@ -96,9 +99,21 @@ function WriteStoryPage() {
   };
 
   const handlePlayVoice = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
     if (story.voices && story.voices[currentPage]) {
       const audio = new Audio(story.voices[currentPage]);
+      audioRef.current = audio;
       audio.play();
+    }
+  };
+
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
     }
   };
 
