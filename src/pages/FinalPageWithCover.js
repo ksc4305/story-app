@@ -28,9 +28,7 @@ const FinalPageWithCover = () => {
     // 더미 데이터를 사용하여 표지 이미지를 설정합니다.
     // setCoverImages([
     //   'https://via.placeholder.com/150?text=Cover+1',
-    //   'https://via.placeholder.com/150?text=Cover+2',
-    //   'https://via.placeholder.com/150?text=Cover+3',
-    //   'https://via.placeholder.com/150?text=Cover+4'
+    //   'https://via.placeholder.com/150?text=Cover+2'
     // ]);
   }, [storyId]);
 
@@ -84,10 +82,11 @@ const FinalPageWithCover = () => {
                 cursor: 'pointer',
                 border: coverImage === cover ? '2px solid lightgreen' : '2px solid transparent',
                 transition: 'border 0.3s',
+                height: '150px', // 이미지 박스 높이를 줄임
               }}
               onClick={() => handleCoverSelect(cover)}
             >
-              <img src={cover} alt={`cover-${index}`} style={{ width: '100%', height: 'auto' }} />
+              <img src={cover} alt={`cover-${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </Paper>
           ))}
         </Box>

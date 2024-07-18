@@ -122,10 +122,11 @@ const ImageSelection = () => {
                   cursor: 'pointer',
                   border: selectedImage === image ? '2px solid lightgreen' : '2px solid transparent',
                   transition: 'border 0.3s',
+                  height: '150px', // 이미지 박스 높이를 줄임
                 }}
                 onClick={() => handleImageSelect(image)}
               >
-                <img src={image} alt={`option-${index}`} style={{ width: '100%', height: 'auto' }} />
+                <img src={image} alt={`option-${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </Paper>
             ))}
           </Box>
