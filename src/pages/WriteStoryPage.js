@@ -55,6 +55,18 @@ function WriteStoryPage() {
     //     '/gg10.jpg',
     //     '/gg11.jpg'
     //   ],
+    //   voices: [
+    //     'voice1.mp3',
+    //     'voice2.mp3',
+    //     'voice3.mp3',
+    //     'voice4.mp3',
+    //     'voice5.mp3',
+    //     'voice6.mp3',
+    //     'voice7.mp3',
+    //     'voice8.mp3',
+    //     'voice9.mp3',
+    //     'voice10.mp3'
+    //   ],
     //   created_date: '2023-07-14'
     // };
     // setStory(mockStory);
@@ -83,6 +95,13 @@ function WriteStoryPage() {
     navigate('/read');
   };
 
+  const handlePlayVoice = () => {
+    if (story.voices && story.voices[currentPage]) {
+      const audio = new Audio(story.voices[currentPage]);
+      audio.play();
+    }
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '16px' }}>
@@ -103,7 +122,7 @@ function WriteStoryPage() {
         </IconButton>
       </Box>
       <Box>
-        <IconButton>
+        <IconButton onClick={handlePlayVoice}>
           <PlayCircleOutlineIcon />
         </IconButton>
       </Box>
