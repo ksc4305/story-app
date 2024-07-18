@@ -132,7 +132,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
               mb: 2,
               p: 2,
               cursor: 'pointer',
-              bgcolor: 'background.paper',
+              bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
               '&:hover': {
                 bgcolor: 'rgba(144,238,144,0.5)',
               },
@@ -154,7 +154,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
                 mb: 2,
                 p: 2,
                 cursor: 'pointer',
-                bgcolor: 'background.paper',
+                bgcolor: selectedOption === option1 ? 'rgba(144,238,144,0.8)' : 'background.paper',
                 '&:hover': {
                   bgcolor: 'rgba(144,238,144,0.5)',
                 },
@@ -174,7 +174,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
                 mb: 2,
                 p: 2,
                 cursor: 'pointer',
-                bgcolor: 'background.paper',
+                bgcolor: selectedOption === option2 ? 'rgba(144,238,144,0.8)' : 'background.paper',
                 '&:hover': {
                   bgcolor: 'rgba(144,238,144,0.5)',
                 },
@@ -194,7 +194,7 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
                 mb: 2,
                 p: 2,
                 cursor: 'pointer',
-                bgcolor: 'background.paper',
+                bgcolor: selectedOption === option3 ? 'rgba(144,238,144,0.8)' : 'background.paper',
                 '&:hover': {
                   bgcolor: 'rgba(144,238,144,0.5)',
                 },
