@@ -22,13 +22,6 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
   const [option3, setOption3] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    generateContent();
-    if (fromFinalParam) {
-      setFromFinal(true);
-    }
-  }, [currentPage, storyId, fromFinalParam, generateContent]);
-
   const generateContent = useCallback(async () => {
     setIsLoading(true);
     setOption1('');
@@ -73,6 +66,13 @@ const WritePageComponent = ({ currentPage, nextPage }) => {
       }
     }
   }, [currentPage, storyId]);
+
+  useEffect(() => {
+    generateContent();
+    if (fromFinalParam) {
+      setFromFinal(true);
+    }
+  }, [currentPage, storyId, fromFinalParam, generateContent]);
 
   const handleOptionSelect = (option, index) => {
     setSelectedOption(option);
