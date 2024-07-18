@@ -49,14 +49,18 @@ const ImageSelection = () => {
 
   const handleNext = () => {
     if (selectedImage) {
+      // 현재 페이지의 이미지를 selectedImages 배열에 업데이트
+      const updatedSelectedImages = [...selectedImages];
+      updatedSelectedImages[currentPage - 1] = selectedImage;
       dispatch(updateSelectedImage({ page: currentPage, image: selectedImage }));
+  
       if (currentPage < 10) {
         setCurrentPage(currentPage + 1);
         setSelectedImage('');
         navigate(`/imageSelection?story_id=${storyId}&page=${currentPage + 1}`);
       } else {
         const data = {
-          selected_images: selectedImages
+          selected_images: updatedSelectedImages // 선택된 이미지 배열을 서버로 전송
         };
         axios.post(`http://localhost:8000/api/sse/stories/${storyId}/images`, data)
             .then(res => {
@@ -68,6 +72,7 @@ const ImageSelection = () => {
       }
     }
   };
+  
 
   const handlePrevious = () => {
     if (currentPage > 1) {
