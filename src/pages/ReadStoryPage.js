@@ -75,8 +75,28 @@ function ReadStoryPage() {
       textAlign: 'center', 
       position: 'relative'
     }}>
-      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
-        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '0 16px', width: '50%', padding: '16px', height: '100%' }}>
+      <Box 
+        style={{ 
+          display: 'flex', 
+          flexDirection: 'row', 
+          alignItems: 'center', 
+          justifyContent: currentPage === 0 || currentPage === 11 ? 'center' : 'flex-start', 
+          maxWidth: '80%', 
+          margin: '0 auto', 
+          position: 'relative' 
+        }}
+      >
+        <Box 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            margin: '0 16px', 
+            width: currentPage === 0 || currentPage === 11 ? '100%' : '50%', 
+            padding: '16px', 
+            height: '100%' 
+          }}
+        >
           {currentPage === 0 ? (
             <>
               <Typography variant="h3" style={{ marginTop: '20px', textAlign: 'center' }}>
