@@ -5,7 +5,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import axios from 'axios';
-import './ReadStoryPage.css';
 
 function ReadStoryPage() {
   const { storyId } = useParams();
@@ -64,34 +63,41 @@ function ReadStoryPage() {
   };
 
   return (
-    <div className="read-story-page">
-      <Box className="story-page">
-        <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
-          <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', border: '2px solid lightgreen', padding: '16px' }}>
-            <Typography variant="body1" className="story-content">
-              {story.contents[currentPage]}
-            </Typography>
-          </Box>
-          <div style={{ borderLeft: '4px solid grey', height: '100%', margin: '0 16px' }}></div>
-          {story.images[currentPage] && (
-            <img src={story.images[currentPage]} alt="Story" className="story-image" style={{ border: '2px solid lightgreen' }} />
-          )}
+    <div style={{ 
+      padding: '20px', 
+      maxWidth: '1200px', 
+      margin: '0 auto', 
+      textAlign: 'center', 
+      position: 'relative',
+      backgroundImage: 'url(/path/to/your/book-background-image.jpg)', 
+      backgroundSize: 'cover', 
+      backgroundPosition: 'center'
+    }}>
+      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
+        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', padding: '16px' }}>
+          <Typography variant="body1" style={{ marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem' }}>
+            {story.contents[currentPage]}
+          </Typography>
         </Box>
+        <div style={{ borderLeft: '4px solid grey', height: '100%', margin: '0 16px' }}></div>
+        {story.images[currentPage] && (
+          <img src={story.images[currentPage]} alt="Story" style={{ width: '45%', height: 'auto', marginBottom: '16px' }} />
+        )}
       </Box>
-      <Box className="navigation-controls">
-        <IconButton onClick={handlePreviousPage} disabled={currentPage === 0}>
+      <Box style={{ position: 'absolute', top: '50%', width: '100%', display: 'flex', justifyContent: 'space-between', transform: 'translateY(-50%)' }}>
+        <IconButton onClick={handlePreviousPage} disabled={currentPage === 0} style={{ fontSize: '2rem' }}>
           <ArrowBackIosIcon />
         </IconButton>
-        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1}>
+        <IconButton onClick={handleNextPage} disabled={currentPage === totalPages - 1} style={{ fontSize: '2rem' }}>
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
-      <Box className="play-button">
+      <Box>
         <IconButton onClick={handlePlayVoice} style={{ fontSize: '3rem', color: 'lightgreen' }}>
           <PlayCircleOutlineIcon fontSize="inherit" />
         </IconButton>
       </Box>
-      <Typography variant="body1" className="page-number">
+      <Typography variant="body1" style={{ fontWeight: 'bold', position: 'absolute', top: 'calc(50% + 40px)', left: '50%', transform: 'translateX(-50%)' }}>
         {currentPage + 1}/{totalPages}
       </Typography>
     </div>
