@@ -78,20 +78,19 @@ function ReadStoryPage() {
       <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', maxWidth: '80%', margin: '0 auto', position: 'relative' }}>
         <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', margin: '0 16px', width: '50%', padding: '16px', height: '100%' }}>
           {currentPage === 0 ? (
-            <Typography variant="h3" style={{ marginTop: '20px', fontWeight: 'bold' }}>
+            <Typography variant="h3" style={{ marginTop: '20px' }}>
               {story.title}
             </Typography>
           ) : currentPage === 11 ? (
-            <Typography variant="h5" style={{ marginTop: '20px', fontWeight: 'bold' }}>
+            <Typography variant="h5" style={{ marginTop: '20px' }}>
               Created by {story.author}
             </Typography>
           ) : (
-            <Typography variant="body1" style={{ marginTop: '20px', fontWeight: 'bold', fontSize: '1.2rem', height: '100%' }}>
+            <Typography variant="body1" style={{ marginTop: '20px', fontSize: '1.2rem', height: '100%' }}>
               {story.contents[currentPage - 1]}
             </Typography>
           )}
         </Box>
-        <div style={{ borderLeft: '4px solid black', height: '300px', margin: '0 16px', alignSelf: 'center' }}></div>
         {story.images[currentPage - 1] && currentPage > 0 && currentPage < 11 && (
           <img src={story.images[currentPage - 1]} alt="Story" style={{ width: '45%', height: 'auto', marginBottom: '16px' }} />
         )}
@@ -104,7 +103,7 @@ function ReadStoryPage() {
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
-      <Typography variant="h5" style={{ fontWeight: 'bold', marginTop: '20px', marginBottom: '20px' }}>
+      <Typography variant="h5" style={{ marginTop: '20px', marginBottom: '20px' }}>
         {currentPage + 1}/{totalPages}
       </Typography>
       <Box>
