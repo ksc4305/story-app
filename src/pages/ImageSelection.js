@@ -16,8 +16,8 @@ const ImageSelection = () => {
 
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [story, setStory] = useState('');
-  const [images, setImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(selectedImages[currentPage - 1] || '');
+  const [image, setImage] = useState('');
+  // const [selectedImage, setSelectedImage] = useState(selectedImages[currentPage - 1] || '');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,57 +25,48 @@ const ImageSelection = () => {
       try {
         const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/images`);
         setStory(response.data.content);
-        setImages(response.data.images.slice(0, 2)); // 이미지 배열을 2개로 제한
+        setImage(response.data.images[0]); // 이미지 하나만 설정
       } catch (error) {
         console.error('Error fetching content:', error);
       }
 
       // 더미 데이터를 사용
       // setStory(`이것은 ${currentPage}번째 페이지의 이야기입니다.`);
-      // setImages([
-      //   'https://via.placeholder.com/150?text=Image+1',
-      //   'https://via.placeholder.com/150?text=Image+2'
-      // ]);
+      // setImage('https://via.placeholder.com/150?text=Image+1');
     };
 
     fetchData();
   }, [currentPage, storyId]);
 
-  const handleImageSelect = (image) => {
-    setSelectedImage(image);
-  };
-
   const handleNext = () => {
-    if (selectedImage) {
-      // 현재 페이지의 이미지를 selectedImages 배열에 업데이트
-      const updatedSelectedImages = [...selectedImages];
-      updatedSelectedImages[currentPage - 1] = selectedImage;
-      dispatch(updateSelectedImage({ page: currentPage, image: selectedImage }));
-  
-      if (currentPage < 10) {
-        setCurrentPage(currentPage + 1);
-        setSelectedImage('');
-        navigate(`/imageSelection?story_id=${storyId}&page=${currentPage + 1}`);
-      } else {
-        const data = {
-          selected_images: updatedSelectedImages // 선택된 이미지 배열을 서버로 전송
-        };
-        axios.post(`http://localhost:8000/api/sse/stories/${storyId}/images`, data)
-            .then(res => {
-              navigate(`/finalCover?story_id=${storyId}`);
-            })
-            .catch(err => {
-              console.log(err);
-            });
-      }
+    // 현재 페이지의 이미지를 selectedImages 배열에 업데이트
+    const updatedSelectedImages = [...selectedImages];
+    updatedSelectedImages[currentPage - 1] = image;
+    dispatch(updateSelectedImage({ page: currentPage, image: image }));
+
+    if (currentPage < 10) {
+      setCurrentPage(currentPage + 1);
+      navigate(`/imageSelection?story_id=${storyId}&page=${currentPage + 1}`);
+    } else {
+      const data = {
+        selected_images: updatedSelectedImages // 선택된 이미지 배열을 서버로 전송
+      };
+      axios.post(`http://localhost:8000/api/sse/stories/${storyId}/images`, data)
+          .then(res => {
+            navigate(`/finalCover?story_id=${storyId}`);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      // console.log('Story images saved:', data);
+      // navigate(`/finalCover?story_id=${storyId}`);
     }
   };
 
   const handlePrevious = () => {
     if (currentPage > 1) {
-      dispatch(updateSelectedImage({ page: currentPage, image: selectedImage }));
+      dispatch(updateSelectedImage({ page: currentPage, image: image }));
       setCurrentPage(currentPage - 1);
-      setSelectedImage('');
       navigate(`/imageSelection?story_id=${storyId}&page=${currentPage - 1}`);
     }
   };
@@ -113,22 +104,15 @@ const ImageSelection = () => {
           <Paper elevation={3} sx={{ p: 2, mb: 4 }}>
             <Typography variant="h6">{story}</Typography>
           </Paper>
-          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 4 }}>
-            {images.map((image, index) => (
-              <Paper
-                key={index}
-                sx={{
-                  p: 1,
-                  cursor: 'pointer',
-                  border: selectedImage === image ? '2px solid lightgreen' : '2px solid transparent',
-                  transition: 'border 0.3s',
-                  height: '150px', // 이미지 박스 높이를 줄임
-                }}
-                onClick={() => handleImageSelect(image)}
-              >
-                <img src={image} alt={`option-${index}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </Paper>
-            ))}
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+            <Paper
+              sx={{
+                p: 1,
+                height: '150px', // 이미지 박스 높이를 줄임
+              }}
+            >
+              <img src={image} alt="story" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </Paper>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Button
@@ -147,7 +131,6 @@ const ImageSelection = () => {
             <Button
               variant="contained"
               onClick={handleNext}
-              disabled={!selectedImage}
               sx={{
                 bgcolor: 'lightgreen',
                 '&:hover': { bgcolor: 'rgba(144,238,144,0.5)' },
