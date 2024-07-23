@@ -108,10 +108,10 @@ const ImageSelection = () => {
             <Paper
               sx={{
                 p: 1,
-                height: '150px', // 이미지 박스 높이를 줄임
+                height: '250px', // 이미지 박스 높이를 줄임
               }}
             >
-              <img src={image} alt="story" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={image} alt="story" style={{ width: '250px', height: '250px', objectFit: 'cover' }} />
             </Paper>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
