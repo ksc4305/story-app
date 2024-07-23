@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, Box, IconButton, Button } from '@mui/material';
+import { Typography, Box, IconButton, Button, Divider } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
@@ -83,7 +83,8 @@ function WriteStoryPage() {
           justifyContent: currentPage === 0 || currentPage === 11 ? 'center' : 'flex-start', 
           maxWidth: '80%', 
           margin: '0 auto', 
-          position: 'relative' 
+          position: 'relative',
+          gap: '50px' // 요소 간 간격 추가
         }}
       >
         <Box 
@@ -110,7 +111,8 @@ function WriteStoryPage() {
                     width: 'auto', 
                     height: '80vh', 
                     marginTop: '20px', 
-                    objectFit: 'contain' 
+                    objectFit: 'contain',
+                    borderRadius: '10px' // 이미지 테두리 둥글게
                   }} 
                 />
               )}
@@ -125,8 +127,20 @@ function WriteStoryPage() {
             </Typography>
           )}
         </Box>
-        {story.images[currentPage - 1] && currentPage > 0 && currentPage < 11 && (
-          <img src={story.images[currentPage - 1]} alt="Story" style={{ width: '45%', height: 'auto', marginBottom: '16px' }} />
+        {currentPage > 0 && currentPage < 11 && (
+          <>
+            <Divider orientation="vertical" flexItem style={{ borderColor: 'lightgrey', height: '300px', marginTop: '70px' }} />
+            <img 
+              src={story.images[currentPage - 1]} 
+              alt="Story" 
+              style={{ 
+                width: '45%', 
+                height: 'auto', 
+                marginBottom: '16px',
+                borderRadius: '10px' // 이미지 테두리 둥글게
+              }} 
+            />
+          </>
         )}
       </Box>
       <Box style={{ position: 'absolute', top: '50%', width: '100%', display: 'flex', justifyContent: 'space-between', transform: 'translateY(-50%)' }}>
