@@ -17,15 +17,13 @@ const ImageSelection = () => {
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [story, setStory] = useState('');
   const [image, setImage] = useState('');
-  // const [selectedImage, setSelectedImage] = useState(selectedImages[currentPage - 1] || '');
 
   useEffect(() => {
     const fetchData = async () => {
-      // 실제 서버 요청 부분
       try {
         const response = await axios.get(`http://localhost:8000/api/sse/stories/${storyId}/pages/${currentPage}/images`);
         setStory(response.data.content);
-        setImage(response.data.images[0]); // 이미지 하나만 설정
+        setImage(response.data.images); // 서버에서 단일 URL을 받음
       } catch (error) {
         console.error('Error fetching content:', error);
       }
@@ -39,7 +37,6 @@ const ImageSelection = () => {
   }, [currentPage, storyId]);
 
   const handleNext = () => {
-    // 현재 페이지의 이미지를 selectedImages 배열에 업데이트
     const updatedSelectedImages = [...selectedImages];
     updatedSelectedImages[currentPage - 1] = image;
     dispatch(updateSelectedImage({ page: currentPage, image: image }));
@@ -49,7 +46,7 @@ const ImageSelection = () => {
       navigate(`/imageSelection?story_id=${storyId}&page=${currentPage + 1}`);
     } else {
       const data = {
-        selected_images: updatedSelectedImages // 선택된 이미지 배열을 서버로 전송
+        selected_images: updatedSelectedImages
       };
       axios.post(`http://localhost:8000/api/sse/stories/${storyId}/images`, data)
           .then(res => {
@@ -58,8 +55,6 @@ const ImageSelection = () => {
           .catch(err => {
             console.log(err);
           });
-      // console.log('Story images saved:', data);
-      // navigate(`/finalCover?story_id=${storyId}`);
     }
   };
 
@@ -108,7 +103,7 @@ const ImageSelection = () => {
             <Paper
               sx={{
                 p: 1,
-                height: '250px', // 이미지 박스 높이를 줄임
+                height: '250px',
               }}
             >
               <img src={image} alt="story" style={{ width: '250px', height: '250px', objectFit: 'cover' }} />
