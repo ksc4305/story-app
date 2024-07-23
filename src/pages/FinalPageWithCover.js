@@ -82,7 +82,7 @@ const FinalPageWithCover = () => {
                 cursor: 'pointer',
                 border: coverImage === cover ? '2px solid lightgreen' : '2px solid transparent',
                 transition: 'border 0.3s',
-                height: '150px', // 이미지 박스 높이를 줄임
+                height: '200px', // 이미지 박스 높이를 줄임
               }}
               onClick={() => handleCoverSelect(cover)}
             >
