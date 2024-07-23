@@ -29,21 +29,25 @@ const VoiceSelection = () => {
       // setVoiceList([
       //   {
       //     id: 1,
+      //     name: 'Voice 1',
       //     image: 'https://via.placeholder.com/100?text=Voice+1',
       //     audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
       //   },
       //   {
       //     id: 2,
+      //     name: 'Voice 2',
       //     image: 'https://via.placeholder.com/100?text=Voice+2',
       //     audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
       //   },
       //   {
       //     id: 3,
+      //     name: 'Voice 3',
       //     image: 'https://via.placeholder.com/100?text=Voice+3',
       //     audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
       //   },
       //   {
       //     id: 4,
+      //     name: 'Voice 4',
       //     image: 'https://via.placeholder.com/100?text=Voice+4',
       //     audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
       //   }
@@ -129,6 +133,9 @@ const VoiceSelection = () => {
                   borderRadius: '20%' // 이미지 테두리 둥글게
                 }}
               />
+              <Typography variant="subtitle1" sx={{ mt: 1 }}>
+                {voice.name}
+              </Typography>
               <IconButton onClick={(e) => { e.stopPropagation(); handlePlayPause(voice); }}>
                 {playingVoiceId === voice.id ? (
                   <PauseIcon sx={{ color: 'lightgreen' }} /> // 일시 정지 아이콘
